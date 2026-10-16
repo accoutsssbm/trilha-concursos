@@ -6,8 +6,8 @@
    ===================================================================== */
 window.TC_CONFIG = {
   github: {
-    owner: "",
-    repo: "",
+    owner: "accoutsssbm",
+    repo: "trilha-concursos-dados",
     branch: "main",
     path: "data/db.json"
   }

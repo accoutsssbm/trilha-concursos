@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trilha Concursos</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230B1220'/><text x='50' y='68' font-size='52' text-anchor='middle' font-family='Arial' font-weight='700' fill='%233D8BFD'>T</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* Paleta azul, preto e branco. Estrutura herdada da Trilha GFC: trilho lateral, faixa de título, fases com estações, PDCA por módulo. */
+:root{
+  --az:#1554C0; --az-esc:#0D3B8C; --az-cl:#E6EEFC; --az-vivo:#3D8BFD;
+  --pre:#0B1220; --gra:#1B2433; --bra:#FFFFFF; --nev:#F3F6FA; --lin:#D5DCE6;
+  --txt:#0B1220; --sub:#56627A; --ver:#C21F3A; --ok:#1E7B45; --lar:#B5620C;
+  --cond:'Barlow Condensed','Arial Narrow',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bra)}
+body{font-family:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--txt);font-size:16px;line-height:1.55;padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:var(--az)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--az-vivo);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- estrutura ---------- */
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh;background:linear-gradient(to right,var(--pre) 240px,var(--bra) 240px)}
+.rail{background:var(--pre);color:#fff;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.marca{background:var(--az);padding:18px 20px 16px;display:block;text-decoration:none;color:#fff}
+.marca .wm{font-family:var(--cond);font-weight:700;font-size:26px;letter-spacing:.3px;line-height:1}
+.marca .wm b{color:#BFD6FF;font-weight:700}
+.marca small{display:block;font-size:12.5px;opacity:.85;margin-top:4px}
+.quem{padding:16px 22px 12px;font-size:14px;border-bottom:1px solid rgba(255,255,255,.12)}
+.quem strong{display:block;font-size:16px}
+.quem a{color:#9CC0FF;font-size:13.5px;text-decoration:none}
+.rail nav{padding:8px 0;flex:1;overflow:auto}
+.rail nav a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 22px;color:#E8EEF8;font-weight:600;text-decoration:none;border-left:5px solid transparent}
+.rail nav a:hover{background:rgba(255,255,255,.06)}
+.rail nav a.ativo{background:rgba(61,139,253,.16);border-left-color:var(--az-vivo);color:#fff}
+.badge{background:var(--az-vivo);color:#fff;border-radius:10px;padding:0 8px;font-size:13px;font-weight:700;min-width:22px;text-align:center}
+.rail .pe{padding:14px 22px 18px;font-size:12.5px;color:rgba(255,255,255,.65);border-top:1px solid rgba(255,255,255,.12)}
+.rail .pe .sync{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-weight:600;color:#fff}
+.dot{width:8px;height:8px;border-radius:50%;background:#3FBF76;display:inline-block}
+.dot.local{background:#F0A030} .dot.salvando{background:var(--az-vivo)}
+.main{min-width:0;display:flex;flex-direction:column}
+.topo{background:var(--gra);color:#fff;padding:26px 44px 22px;border-bottom:5px solid var(--az)}
+.topo h1{font-family:var(--cond);font-weight:700;text-transform:uppercase;font-size:clamp(28px,4vw,42px);letter-spacing:.4px;margin:0;line-height:1.02}
+.topo p{margin:6px 0 0;color:#D3DCEA;max-width:72ch}
+.topo .volta{display:inline-block;color:#9CC0FF;text-decoration:none;font-weight:600;font-size:14px;margin-bottom:6px}
+.conteudo{padding:30px 44px 72px;max-width:1140px;width:100%}
+.faixa{background:var(--az-cl);padding:14px 20px;font-style:italic;font-weight:500;margin:0 0 26px;border-left:6px solid var(--az)}
+
+h2{font-family:var(--cond);font-weight:700;font-size:26px;text-transform:uppercase;margin:34px 0 12px;line-height:1.1}
+h2:first-child{margin-top:0}
+h3{font-family:var(--cond);font-weight:600;font-size:21px;margin:24px 0 8px;line-height:1.15}
+h4{font-size:16px;margin:16px 0 6px}
+.sub{color:var(--sub)}
+.peq{font-size:14px}
+p{margin:0 0 12px;max-width:78ch}
+
+/* ---------- componentes ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--az);color:#fff;border:0;border-radius:2px;padding:10px 18px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 2px 0 var(--az-esc)}
+.btn:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.escuro{background:var(--pre);box-shadow:0 2px 0 #000}
+.btn.linha{background:transparent;box-shadow:inset 0 0 0 2px var(--gra);color:var(--gra)}
+.btn.perigo{background:transparent;box-shadow:inset 0 0 0 2px var(--ver);color:var(--ver)}
+.btn.mini{padding:5px 11px;font-size:14px}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+
+.painel{border:1px solid var(--lin);background:#fff;padding:20px 22px;margin-bottom:18px}
+.painel.cinza{background:var(--nev);border-color:transparent}
+.painel.destaque{border:2px solid var(--pre);box-shadow:5px 5px 0 var(--az)}
+.grade{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))} .g3{grid-template-columns:repeat(3,minmax(0,1fr))} .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.num{border-top:4px solid var(--az);padding-top:10px}
+.num .v{font-family:var(--cond);font-weight:700;font-size:38px;line-height:1}
+.num .l{font-size:14px;color:var(--sub)}
+
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+input[type=text],input[type=password],input[type=date],input[type=number],input[type=url],select,textarea{width:100%;border:1px solid #B9C3D2;background:#fff;padding:9px 11px;border-radius:2px}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--az)}
+.linha-form{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.ajuda{font-size:13px;color:var(--sub);margin-top:4px}
+
+.tabela-wrap{overflow-x:auto;border:1px solid var(--lin)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th{background:var(--pre);color:#fff;text-align:left;font-weight:600;padding:9px 12px;white-space:nowrap}
+td{padding:9px 12px;border-top:1px solid var(--lin);vertical-align:top}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.grp td{background:var(--nev);font-weight:700}
+
+.st{display:inline-block;padding:2px 9px;font-size:13px;font-weight:600;border-radius:2px;white-space:nowrap}
+.st-bloqueado{background:#ECEFF3;color:#7B8597}
+.st-disponivel{background:var(--az-cl);color:var(--az-esc)}
+.st-estudo{background:#DCE9FF;color:var(--az)}
+.st-teste{background:var(--az);color:#fff}
+.st-autocorrecao{background:#E7E2F6;color:#4B3A8C}
+.st-reciclagem{background:#FBE6D3;color:var(--lar)}
+.st-aprovado{background:#DCF1E4;color:var(--ok)}
+.st-aguardando{background:#ECEFF3;color:#7B8597}
+.st-andamento{background:#DCE9FF;color:var(--az)}
+.st-simulado{background:var(--pre);color:#fff}
+.st-concluida{background:#DCF1E4;color:var(--ok)}
+
+.atencao{border-top:2px solid var(--az);border-bottom:2px solid var(--az);padding:12px 8px;margin:16px 0;text-align:center;font-style:italic}
+.atencao b{color:var(--ver);font-weight:700}
+.lista{margin:0 0 12px;padding-left:20px}
+.lista li{margin-bottom:6px;max-width:78ch}
+.check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer;font-weight:400;font-size:16px;margin:0}
+.check input{width:20px;height:20px;accent-color:var(--az);margin-top:2px;flex:none}
+.barra{height:10px;background:#E3E8EF;position:relative;overflow:hidden}
+.barra i{position:absolute;inset:0 auto 0 0;background:var(--az)}
+.aviso{padding:12px 16px;border-left:5px solid var(--lar);background:#FFF4E8;margin:12px 0}
+.aviso.ok{border-color:var(--ok);background:#ECF7F0}
+.aviso.info{border-color:var(--az);background:#EEF3FC}
+.aviso.erro{border-color:var(--ver);background:#FCEBEE}
+.vazio{padding:26px;text-align:center;color:var(--sub);border:2px dashed var(--lin)}
+.exemplo{background:var(--nev);border-left:4px solid var(--gra);padding:10px 14px;margin:8px 0 14px;font-size:15px}
+.exemplo b:first-child{display:block;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin-bottom:2px}
+.formula{font-family:ui-monospace,Consolas,monospace;background:var(--pre);color:#E8EEF8;padding:10px 14px;margin:8px 0 14px;overflow-x:auto;white-space:pre}
+.dica{border:1px dashed var(--az);padding:10px 14px;margin:10px 0 14px;font-size:15px}
+.dica b:first-child{color:var(--az)}
+
+/* ---------- trilha ---------- */
+.trilho{margin:8px 0 6px}
+.fase{display:grid;grid-template-columns:160px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--lin)}
+.fase .fn{font-family:var(--cond);font-weight:700;font-size:15px;text-transform:uppercase;color:var(--sub);line-height:1.2}
+.fase .fn b{display:block;font-size:44px;color:var(--pre);line-height:.95}
+.fase .fn .st{white-space:normal}
+.estacoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.estacao{display:block;text-decoration:none;color:var(--txt);border:1px solid var(--lin);padding:12px 14px 13px;background:#fff}
+.estacao:hover{border-color:var(--az)}
+.estacao .cod{font-family:var(--cond);font-weight:700;font-size:15px;color:var(--sub)}
+.estacao .tit{font-weight:600;line-height:1.25;margin:2px 0 8px;display:block}
+.estacao .disc{display:block;font-size:13px;color:var(--sub);margin-bottom:6px}
+.estacao.atual{border:2px solid var(--pre);box-shadow:5px 5px 0 var(--az)}
+.estacao.bloq{opacity:.6}
+.estacao.feito{background:var(--nev)}
+.estacao.sim{background:var(--pre);color:#fff;border-color:var(--pre)}
+.estacao.sim .cod,.estacao.sim .disc{color:#AFC4E6}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card-trilha{border:1px solid var(--lin);background:#fff;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.card-trilha.ativa{border:2px solid var(--pre);box-shadow:5px 5px 0 var(--az)}
+.card-trilha .tt{font-family:var(--cond);font-weight:700;font-size:26px;text-transform:uppercase;line-height:1}
+.card-trilha .cg{font-weight:600}
+.card-trilha .acoes{margin-top:auto}
+
+/* ---------- PDCA ---------- */
+.pdca-wrap{display:grid;grid-template-columns:200px 1fr;gap:26px;align-items:center}
+.pdca svg{width:100%;height:auto;display:block}
+.pdca-leg{display:grid;gap:10px}
+.pdca-leg div{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.pdca-leg b{font-family:var(--cond);font-size:24px;line-height:1;width:34px;height:34px;display:grid;place-items:center;background:#E8ECF2;color:#8B95A7}
+.pdca-leg .feito b{background:var(--pre);color:#fff}
+.pdca-leg .agora b{background:var(--az);color:#fff}
+.pdca-leg span{font-size:14.5px}
+.pdca-leg strong{display:block;font-size:15px}
+.plano{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--lin);margin-bottom:24px}
+.plano div{padding:12px 14px;border-left:1px solid var(--lin)}
+.plano div:first-child{border-left:0}
+.plano small{display:block;color:var(--sub);font-size:13px}
+.plano strong{font-family:var(--cond);font-size:22px;line-height:1.1}
+
+/* ---------- questões ---------- */
+.questao{border:1px solid var(--lin);padding:18px 20px;margin-bottom:16px;background:#fff}
+.questao .qh{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:8px}
+.questao .qn{font-family:var(--cond);font-weight:700;font-size:20px}
+.questao .qt{font-size:13px;color:var(--sub);white-space:nowrap}
+.questao .base{background:var(--nev);padding:10px 14px;margin-bottom:10px;font-size:15px;white-space:pre-wrap}
+.questao .enun{font-weight:600;margin-bottom:12px;max-width:80ch;white-space:pre-wrap}
+.opcao{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid transparent;cursor:pointer}
+.opcao:hover{background:var(--nev)}
+.opcao input{margin-top:4px;accent-color:var(--az);flex:none}
+.opcao .let{font-weight:700;min-width:18px}
+.opcao.certa{border-color:var(--ok);background:#ECF7F0}
+.opcao.errada{border-color:var(--ver);background:#FCEBEE}
+.ce{display:flex;gap:10px;flex-wrap:wrap}
+.ce label{display:flex;align-items:center;gap:8px;border:1px solid var(--lin);padding:7px 14px;margin:0;cursor:pointer;font-weight:600}
+.ce label input{accent-color:var(--az)}
+.resposta{background:var(--nev);padding:10px 14px;white-space:pre-wrap;border-left:4px solid var(--gra);margin:6px 0}
+.gabarito{background:var(--az-cl);padding:10px 14px;border-left:4px solid var(--az);margin:8px 0;font-size:15px}
+.gabarito b{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.resultado{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:18px 22px;background:var(--pre);color:#fff;margin:18px 0}
+.resultado .nota{font-family:var(--cond);font-size:56px;font-weight:700;line-height:1;color:#7FB2FF}
+.resultado .rot{font-family:var(--cond);font-size:22px;text-transform:uppercase;font-weight:700}
+details.acc{border:1px solid var(--lin);margin-bottom:10px;background:#fff}
+details.acc>summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::after{content:"+";font-family:var(--cond);font-size:22px;line-height:1}
+details.acc[open]>summary::after{content:"–"}
+details.acc>.corpo{padding:4px 16px 16px}
+
+/* ---------- login ---------- */
+.login{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.login .lado{background:var(--pre);color:#fff;padding:48px 44px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;border-right:8px solid var(--az)}
+.login .lado h1{overflow-wrap:break-word;font-family:var(--cond);font-weight:700;font-size:clamp(42px,5.6vw,80px);line-height:.92;text-transform:uppercase;margin:24px 0 18px}
+.login .lado h1 span{color:var(--az-vivo)}
+.login .lado p{font-weight:500;max-width:44ch;color:#D3DCEA}
+.login .form{padding:48px 44px;display:flex;flex-direction:column;justify-content:center;max-width:580px}
+.selo{background:var(--az);color:#fff;font-family:var(--cond);font-weight:700;font-size:22px;padding:6px 12px;align-self:flex-start}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--pre);color:#fff;padding:12px 20px;border-left:6px solid var(--az-vivo);z-index:60;max-width:90vw;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.toast.erro{border-left-color:var(--ver)}
+.carregando{min-height:100vh;display:grid;place-items:center;font-family:var(--cond);font-size:26px;text-transform:uppercase;background:var(--pre);color:#fff}
+.modal-fundo{position:fixed;inset:0;background:rgba(11,18,32,.55);display:grid;place-items:center;z-index:70;padding:16px}
+.modal{background:#fff;max-width:480px;width:100%;padding:22px 24px;border-top:6px solid var(--az)}
+.modal p{margin-bottom:6px}
+
+/* ---------- gráficos e indicadores ---------- */
+.grafico{border:1px solid var(--lin);padding:14px 16px 10px;background:#fff;margin-bottom:18px}
+.grafico h3{margin:0 0 2px}
+.grafico .leg{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--sub);margin:4px 0 6px}
+.grafico .leg i{display:inline-block;width:14px;height:4px;vertical-align:middle;margin-right:5px}
+.grafico svg{width:100%;height:auto;display:block}
+.medidor{display:grid;grid-template-columns:200px 1fr 52px;gap:10px;align-items:center;font-size:14.5px;margin:6px 0}
+.semaforo{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.semaforo i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.duvida{border:1px solid var(--lin);padding:14px 18px;margin-bottom:12px;background:#fff}
+.duvida .meta{font-size:13px;color:var(--sub);margin-bottom:6px}
+.duvida .perg{white-space:pre-wrap;font-weight:500}
+.duvida .resp{background:#EEF3FC;border-left:4px solid var(--az);padding:8px 14px;margin-top:10px;white-space:pre-wrap}
+.duvida .resp small{display:block;color:var(--sub)}
+.duvida.aberta{border-left:5px solid var(--az)}
+.cap-semana{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+
+/* ---------- responsivo ---------- */
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr);background:var(--bra)}
+  .rail{position:static;height:auto;min-width:0}
+  .rail nav{display:flex;overflow-x:auto;padding:0}
+  .rail nav a{white-space:nowrap;border-left:0;border-bottom:4px solid transparent;padding:10px 14px}
+  .rail nav a.ativo{border-bottom-color:var(--az-vivo)}
+  .quem,.rail .pe{display:none}
+  .topo{padding:22px 20px 18px}
+  .conteudo{padding:22px 20px 60px}
+  .g2,.g3,.g4{grid-template-columns:1fr 1fr}
+  .fase{grid-template-columns:1fr;gap:8px}
+  .fase .fn b{display:inline;font-size:30px;margin-right:6px}
+  .pdca-wrap{grid-template-columns:1fr}
+  .pdca{max-width:200px}
+  .plano{grid-template-columns:1fr 1fr}
+  .plano div:nth-child(3){border-left:0}
+  .plano div:nth-child(n+3){border-top:1px solid var(--lin)}
+  .login{grid-template-columns:1fr}
+  .login .lado{padding:30px 22px;border-right:0;border-bottom:8px solid var(--az)}
+  .login .form{padding:28px 22px}
+  .medidor{grid-template-columns:120px 1fr 44px}
+  .cap-semana{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:520px){.g2,.g3,.g4{grid-template-columns:1fr}}
+@media print{.rail,.acoes,.btn{display:none!important}.app{display:block}.topo{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div id="app"><div class="carregando">Carregando a trilha…</div></div>
+<script src="config.js"></script>
+<script src="trilhas.js"></script>
+<script src="conteudo/portugues.js"></script>
+<script src="conteudo/matematica.js"></script>
+<script src="conteudo/informatica.js"></script>
+<script src="conteudo/etica-linguas.js"></script>
+<script src="conteudo/prf-transito.js"></script>
+<script src="conteudo/prf-direito.js"></script>
+<script src="conteudo/prf-gerais.js"></script>
+<script src="conteudo/bb-bancarios.js"></script>
+<script src="conteudo/bb-vendas-financeira.js"></script>
+<script src="conteudo/bb-tecnologia.js"></script>
+<script src="conteudo/detran.js"></script>
+<script src="conteudo/redacao.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   TRILHA CONCURSOS — plataforma de estudo baseada na Trilha GFC.
+   Vários alunos, cada um com nome + PIN, escolhe a trilha (concurso/cargo).
+   Cada módulo é um ciclo PDCA: planejar → estudar → teste → agir.
+   Cada fase termina com uma prova anterior real (simulado).
+   Base de dados: um JSON no GitHub (API de Contents) ou só no navegador.
+   ===================================================================== */
+const TR = window.TRILHAS || {};
+const MODLIB = window.MODULOS || {};
+const CFG = window.TC_CONFIG || {};
+const K_CFG = "tc_cfg", K_DB = "tc_db", K_SES = "tc_sessao", K_RASC = "tc_rasc_";
+const S = { db: null, sha: null, user: null, salvando: false, erroCarga: null };
+const PDCA = {
+  P: { nome: "Planejar", texto: "Horas de estudo e nota mínima definidas pelo peso da disciplina no edital. Ao iniciar, o prazo do teste é calculado pela sua rotina." },
+  D: { nome: "Executar", texto: "Estudo do conteúdo completo no site, checklist, anotações e dúvidas." },
+  C: { nome: "Checar", texto: "Teste no estilo da banca. Abaixo da nota mínima, o módulo volta para revisão." },
+  A: { nome: "Agir", texto: "Aprovado: módulo concluído. No fim da fase, resolva a prova anterior e registre o resultado." }
+};
+
+/* ------------------------------ utilidades ------------------------------ */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const hoje = () => iso(new Date());
+const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const fmt = s => s ? s.slice(0, 10).split("-").reverse().join("/") : "—";
+const fmtHora = s => { if (!s) return "—"; const d = new Date(s); return d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }); };
+const nota1 = n => n == null || isNaN(n) ? "—" : (Math.round(n * 10) / 10).toFixed(1).replace(".", ",");
+const pct = n => n == null || isNaN(n) ? "—" : Math.round(n) + "%";
+const fmtH = h => `${String(Math.round(h * 10) / 10).replace(".", ",")} h`;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const media = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+const LET = "ABCDE";
+async function hashPin(salt, pin) {
+  const txt = `tc|${salt}|${pin}`;
+  if (window.crypto?.subtle) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(txt)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
+  let h = 5381; for (const c of txt) h = ((h << 5) + h + c.charCodeAt(0)) >>> 0; return "djb" + h.toString(16);
+}
+function b64enc(str) { const by = new TextEncoder().encode(str); let bin = ""; for (let i = 0; i < by.length; i += 0x8000) bin += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000)); return btoa(bin); }
+function b64dec(b64) { const bin = atob(b64.replace(/\s/g, "")); const by = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) by[i] = bin.charCodeAt(i); return new TextDecoder().decode(by); }
+function toast(msg, erro) { $$(".toast").forEach(x => x.remove()); const t = document.createElement("div"); t.className = "toast" + (erro ? " erro" : ""); t.setAttribute("role", "status"); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), erro ? 6000 : 3200); }
+const ls = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch { } }, del(k) { try { localStorage.removeItem(k); } catch { } } };
+const ss = { get(k) { try { return sessionStorage.getItem(k); } catch { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch { } }, del(k) { try { sessionStorage.removeItem(k); } catch { } } };
+function confirmar(msg, okTxt = "Confirmar") {
+  return new Promise(res => {
+    const f = document.createElement("div"); f.className = "modal-fundo";
+    f.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><p>${esc(msg)}</p><div class="acoes"><button class="btn" data-m="1">${esc(okTxt)}</button><button class="btn linha" data-m="0">Cancelar</button></div></div>`;
+    document.body.appendChild(f); f.querySelector("[data-m='1']").focus();
+    f.addEventListener("click", e => { const b = e.target.closest("[data-m]"); if (!b && e.target !== f) return; f.remove(); res(b ? b.dataset.m === "1" : false); });
+  });
+}
+
+/* ------------------------------ armazenamento ------------------------------ */
+const CAP_PADRAO = { 0: 0, 1: 2, 2: 2, 3: 2, 4: 2, 5: 2, 6: 3 };
+function novoDB() { return { versao: 1, criadoEm: new Date().toISOString(), atualizadoEm: null, alunos: [], progresso: {}, simulados: {}, duvidas: [], questoesExtras: {}, questoesOff: {}, log: [] }; }
+function migrar(db) { const base = novoDB(); for (const k of Object.keys(base)) if (db[k] === undefined) db[k] = base[k]; return db; }
+const Store = {
+  cfg() {
+    const base = Object.assign({ owner: "", repo: "", branch: "main", path: "data/db.json" }, CFG.github || {});
+    let salvo = {}; try { salvo = JSON.parse(ls.get(K_CFG) || "null") || {}; } catch { }
+    const c = Object.assign({ modo: base.owner ? "github" : "local", token: "" }, base, salvo);
+    if (c.modo === "github" && (!c.owner || !c.repo || !c.token)) c.incompleto = true;
+    return c;
+  },
+  gh() { const c = this.cfg(); return c.modo === "github" && !c.incompleto; },
+  salvarCfg(c) { const { incompleto, ...r } = c; ls.set(K_CFG, JSON.stringify(r)); },
+  url(c) { return `https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${c.path.split("/").map(encodeURIComponent).join("/")}`; },
+  hdr(c, extra) { return Object.assign({ Accept: "application/vnd.github+json", Authorization: `Bearer ${c.token}`, "X-GitHub-Api-Version": "2022-11-28" }, extra || {}); },
+  async ghGet(c = this.cfg()) {
+    const u = this.url(c) + `?ref=${encodeURIComponent(c.branch)}&t=${Date.now()}`;
+    const r = await fetch(u, { headers: this.hdr(c), cache: "no-store" });
+    if (r.status === 404) return { db: null, sha: null };
+    if (r.status === 401) throw new Error("Token do GitHub inválido ou expirado. Gere um novo e salve em Configurações.");
+    if (r.status === 403) throw new Error("O token não tem permissão neste repositório (Contents: Read and write).");
+    if (!r.ok) throw new Error(`GitHub respondeu ${r.status} ao ler a base.`);
+    const j = await r.json(); let txt;
+    if (j.content) txt = b64dec(j.content);
+    else { const r2 = await fetch(u, { headers: this.hdr(c, { Accept: "application/vnd.github.raw+json" }), cache: "no-store" }); txt = await r2.text(); }
+    return { db: JSON.parse(txt), sha: j.sha };
+  },
+  async ghPut(db, sha, msg, c = this.cfg()) {
+    const body = { message: msg || "Trilha Concursos: atualização", content: b64enc(JSON.stringify(db, null, 1)), branch: c.branch };
+    if (sha) body.sha = sha;
+    const r = await fetch(this.url(c), { method: "PUT", headers: this.hdr(c, { "Content-Type": "application/json" }), body: JSON.stringify(body) });
+    if (r.status === 409 || r.status === 422) { const e = new Error("conflito"); e.conflito = true; throw e; }
+    if (r.status === 401 || r.status === 403) throw new Error("O token não tem permissão de escrita neste repositório.");
+    if (!r.ok) throw new Error(`GitHub respondeu ${r.status} ao gravar a base.`);
+    return (await r.json()).content.sha;
+  },
+  async carregar() {
+    const c = this.cfg();
+    if (this.gh()) { const { db, sha } = await this.ghGet(c); S.db = migrar(db || novoDB()); S.sha = sha; }
+    else { let d = null; try { d = JSON.parse(ls.get(K_DB) || "null"); } catch { } S.db = migrar(d || novoDB()); S.sha = null; }
+  },
+  async gravar(mut, msg) {
+    const c = this.cfg(); S.salvando = true; atualizarSync();
+    try {
+      if (!this.gh()) { mut(S.db); S.db.atualizadoEm = new Date().toISOString(); ls.set(K_DB, JSON.stringify(S.db)); return; }
+      for (let i = 0; i < 4; i++) {
+        let { db, sha } = await this.ghGet(c); db = migrar(db || novoDB()); mut(db); db.atualizadoEm = new Date().toISOString();
+        try { S.sha = await this.ghPut(db, sha, msg, c); S.db = db; return; }
+        catch (e) { if (e.conflito && i < 3) { await sleep(500 * (i + 1)); continue; } throw e; }
+      }
+    } finally { S.salvando = false; atualizarSync(); }
+  }
+};
+const aluno = id => S.db.alunos.find(a => a.id === id);
+const eu = () => aluno(S.user?.id);
+function registrar(db, acao) { db.log.unshift({ em: new Date().toISOString(), quem: db.alunos.find(a => a.id === S.user?.id)?.nome || "—", acao }); if (db.log.length > 400) db.log.length = 400; }
+async function salvar(mut, msg, ok) {
+  try { await Store.gravar(db => { mut(db); registrar(db, msg); }, "Trilha Concursos: " + msg); if (ok) toast(ok); render(); return true; }
+  catch (e) { console.error(e); toast("Não foi possível salvar: " + e.message, true); render(); return false; }
+}
+let fila = [], filaTimer = null;
+function agendar(mut, msg) {
+  clearTimeout(filaTimer);
+  if (!Store.gh()) { mut(S.db); ls.set(K_DB, JSON.stringify(S.db)); return; }
+  fila.push(mut); mut(S.db); atualizarSync(true);
+  filaTimer = setTimeout(async () => { const muts = fila; fila = [];
+    try { await Store.gravar(db => { muts.forEach(m => m(db)); registrar(db, msg); }, "Trilha Concursos: " + msg); }
+    catch (e) { toast("Não foi possível salvar: " + e.message, true); } }, 2200);
+}
+function atualizarSync(pendente) {
+  const el = $("#sync"); if (!el) return; const c = Store.cfg();
+  el.innerHTML = S.salvando || pendente ? `<span class="dot salvando"></span>Salvando…` : Store.gh() ? `<span class="dot"></span>GitHub · ${esc(c.repo)}` : `<span class="dot local"></span>Salvo só neste navegador`;
+}
+
+/* ------------------------------ calendário de estudo ------------------------------ */
+const DIAS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const cap = () => Object.assign({}, CAP_PADRAO, eu()?.capacidade || {});
+const horasSemana = () => [0, 1, 2, 3, 4, 5, 6].reduce((a, d) => a + Number(cap()[d] || 0), 0);
+function addHoras(ini, horas) {
+  const c = cap(); const d = parse(ini); let acc = 0, g = 0;
+  if (horasSemana() <= 0) { d.setDate(d.getDate() + Math.ceil(horas)); return iso(d); }
+  while (acc < horas - 1e-9 && g < 3000) { d.setDate(d.getDate() + 1); acc += Number(c[d.getDay()] || 0); g++; }
+  return iso(d);
+}
+function diasEntre(a, b) { return Math.round((parse(b) - parse(a)) / 864e5); }
+
+/* ------------------------------ trilha ativa ------------------------------ */
+const TID = () => eu()?.trilhaAtiva || null;
+const T = () => TR[TID()];
+const _cacheMods = {};
+function modsT(tid = TID()) { const t = TR[tid]; if (!t) return []; if (_cacheMods[tid]) return _cacheMods[tid]; return (_cacheMods[tid] = t.modulos.filter(x => MODLIB[x.mod]?.titulo).map((x, i) => ({ ...MODLIB[x.mod], ...x, id: x.mod, cod: "M" + String(i + 1).padStart(2, "0") }))); }
+const modPorId = (id, tid) => modsT(tid).find(m => m.id === id);
+const faseDe = (n, tid = TID()) => TR[tid]?.fases.find(f => f.n === Number(n));
+const modsFase = (n, tid) => modsT(tid).filter(m => m.fase === Number(n));
+const prog = (mid, tid = TID(), aid = S.user?.id) => S.db.progresso?.[aid]?.[tid]?.[mid] || null;
+const simReg = (n, tid = TID(), aid = S.user?.id) => S.db.simulados?.[aid]?.[tid]?.[n] || [];
+/* Alternativas da biblioteca são embaralhadas de forma determinística (mesma ordem sempre para a mesma questão),
+   para o gabarito não se concentrar numa letra. Opções numéricas mantêm a ordem crescente, como nas provas. */
+function _hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function embaralha(q) {
+  if (q.tipo !== "mc" || q.fixa || q.opcoes.every(o => /^\s*(R\$\s*)?[\d−-]/.test(o))) return q;
+  let r = _hash(q.id); const idx = q.opcoes.map((_, i) => i);
+  for (let i = idx.length - 1; i > 0; i--) { r = (Math.imul(r ^ (r >>> 15), 2246822519) + 0x9E3779B9) >>> 0; const j = r % (i + 1); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+  return { ...q, opcoes: idx.map(i => q.opcoes[i]), correta: idx.indexOf(q.correta) };
+}
+function questoesDe(mid) { const m = MODLIB[mid]; if (!m) return []; const base = (m.questoes || []).map((q, i) => embaralha({ ...q, id: q.id || `${mid}q${i + 1}` })); const ex = (S.db.questoesExtras?.[mid] || []).map(q => ({ ...q, extra: true })); return [...base, ...ex].filter(q => !S.db.questoesOff?.[q.id]); }
+function faseSit(n, tid = TID(), aid = S.user?.id) {
+  const ms = modsFase(n, tid); const obr = ms.filter(m => !m.opcional); const opc = ms.filter(m => m.opcional);
+  const ok = obr.every(m => prog(m.id, tid, aid)?.status === "aprovado") && (!opc.length || opc.some(m => prog(m.id, tid, aid)?.status === "aprovado")); const sim = simReg(n, tid, aid);
+  if (ok && sim.length) return "concluida";
+  if (ok) return "simulado";
+  return ms.some(m => prog(m.id, tid, aid)) ? "andamento" : "aguardando";
+}
+function faseLiberada(n, tid = TID(), aid = S.user?.id) { const a = aluno(aid); if (a?.ordemLivre) return true; return TR[tid].fases.filter(f => f.n < n).every(f => faseSit(f.n, tid, aid) === "concluida"); }
+function situacao(mid, tid = TID(), aid = S.user?.id) {
+  const m = modPorId(mid, tid); const p = prog(mid, tid, aid);
+  if (!p) return { st: faseLiberada(m.fase, tid, aid) ? "disponivel" : "bloqueado", p };
+  if (p.status === "estudo" || p.status === "reciclagem") {
+    const ck = m.checklist?.length ? m.checklist.every((_, i) => p.checklist?.[i]) : false;
+    const ok = p.liberado || ck || hoje() >= p.prazo; return { st: ok ? "teste" : p.status, p, faltam: Math.max(0, diasEntre(hoje(), p.prazo)) };
+  }
+  return { st: p.status, p };
+}
+const ROT = { bloqueado: "Bloqueado", disponivel: "Pronto para iniciar", estudo: "Em estudo", teste: "Teste liberado", autocorrecao: "Corrigir dissertativas", reciclagem: "Revisão", aprovado: "Concluído",
+  aguardando: "Não iniciada", andamento: "Em andamento", simulado: "Prova anterior a fazer", concluida: "Fase concluída" };
+const COR = { bloqueado: "#ECEFF3", disponivel: "#E6EEFC", estudo: "#BCD3FA", teste: "#1554C0", autocorrecao: "#D9D0F0", reciclagem: "#F5C9A3", aprovado: "#0B1220" };
+const chip = st => `<span class="st st-${st}">${ROT[st]}</span>`;
+const etapaPDCA = st => ({ disponivel: "P", estudo: "D", reciclagem: "D", teste: "C", autocorrecao: "C", aprovado: "A" }[st] ?? "");
+function moduloAtual(tid = TID()) {
+  const ms = modsT(tid); const opcOk = ms.some(m => m.opcional && prog(m.id, tid)?.status === "aprovado");
+  for (const s of ["autocorrecao", "teste", "reciclagem", "estudo", "disponivel"]) { const m = ms.find(m => situacao(m.id, tid).st === s && !(s === "disponivel" && m.opcional && opcOk)); if (m) return m; } return null;
+}
+function pontuar(q, r, estilo) {
+  if (q.tipo === "mc") return { nota: r === q.correta ? (q.peso || 1) : 0, max: q.peso || 1 };
+  if (q.tipo === "ce") { if (r === undefined || r === null || r === "B") return { nota: 0, max: 1 }; const certo = (r === "C") === !!q.certo; return { nota: certo ? 1 : (estilo === "ce" ? -1 : 0), max: 1 }; }
+  return { nota: null, max: q.peso || 2 };
+}
+function calcNota(t) { let tot = 0, ob = 0; for (const q of t.questoes) { const n = t.notas?.[q.id]; tot += n?.max ?? (q.peso || 1); ob += Number(n?.nota ?? 0); } return tot ? Math.max(0, ob / tot * 10) : 0; }
+function planejamento(tid = TID()) {
+  const a = eu(); const ini = a?.trilhas?.[tid]?.inicio; if (!ini) return [];
+  let H = 0; return modsT(tid).map(m => { H += m.horas; return { m, fim: addHoras(ini, H) }; });
+}
+function previsao(tid = TID()) {
+  let H = 0, pend = false; for (const m of modsT(tid)) { const s = situacao(m.id, tid); if (s.st === "aprovado") continue; pend = true; H += ["estudo", "reciclagem", "teste"].includes(s.st) ? Math.max(0, m.horas / 2) : m.horas; }
+  return pend ? addHoras(hoje(), H) : null;
+}
+function indicadores(tid = TID(), aid = S.user?.id) {
+  const ms = modsT(tid); let aprov = 0, recic = 0, opcOk = false; const n1 = [], nf = [], porDisc = {};
+  for (const m of ms) { const p = prog(m.id, tid, aid); const av = (p?.tentativas || []).filter(t => t.status === "avaliada");
+    recic += av.filter(t => !t.aprovado).length; if (av[0]) n1.push(av[0].nota);
+    if (p?.status === "aprovado") { if (!m.opcional) aprov++; else if (!opcOk) { opcOk = true; aprov++; } nf.push(p.notaTeste); }
+    const nt = av.at(-1)?.nota; if (nt != null) { (porDisc[m.disciplina] = porDisc[m.disciplina] || []).push(nt); } }
+  const sims = TR[tid].fases.flatMap(f => simReg(f.n, tid, aid).map(x => ({ ...x, fase: f.n })));
+  const pl = aid === S.user?.id ? planejamento(tid) : [];
+  return { total: ms.filter(m => !m.opcional).length + (ms.some(m => m.opcional) ? 1 : 0), aprov, recic, media1: media(n1), mediaFinal: media(nf), porDisc, sims, fasesOk: TR[tid].fases.filter(f => faseSit(f.n, tid, aid) === "concluida").length, fimPlanejado: pl.at(-1)?.fim || null, previsao: aid === S.user?.id ? previsao(tid) : null };
+}
+function semaforo(ind) {
+  if (!ind.previsao) return `<span class="semaforo"><i style="background:var(--ok)"></i>Concluída</span>`;
+  if (!ind.fimPlanejado) return "";
+  const d = diasEntre(ind.fimPlanejado, ind.previsao);
+  if (d <= 0) return `<span class="semaforo"><i style="background:var(--ok)"></i>No prazo</span>`;
+  if (d <= 7) return `<span class="semaforo"><i style="background:var(--lar)"></i>Atenção · ${d} dia(s) além</span>`;
+  return `<span class="semaforo"><i style="background:var(--ver)"></i>Atrasado · ${d} dias além</span>`;
+}
+
+/* ------------------------------ gráficos (SVG) ------------------------------ */
+const PAL = ["#0B1220", "#1554C0", "#7FB2FF", "#B5620C", "#1E7B45"];
+function grafLinhas({ labels, series, min = 0, max = 10, alt = 250, passo }) {
+  const W = 680, H = alt, L = 40, R = 14, T0 = 14, B = 34, iw = W - L - R, ih = H - T0 - B;
+  const x = i => L + (labels.length <= 1 ? iw / 2 : i * iw / (labels.length - 1)); const y = v => T0 + ih - (v - min) / (max - min || 1) * ih;
+  const st = passo || (max - min) / 5; let g = "";
+  for (let v = min; v <= max + 1e-9; v += st) g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="#E3E8EF"/><text x="${L - 6}" y="${y(v) + 4}" font-size="11" text-anchor="end" fill="#56627A">${Math.round(v * 10) / 10}</text>`;
+  const sk = Math.ceil(labels.length / 16);
+  labels.forEach((l, i) => { if (i % sk === 0) g += `<text x="${x(i)}" y="${H - 12}" font-size="11" text-anchor="middle" fill="#56627A">${esc(l)}</text>`; });
+  series.forEach((s, k) => { const cor = s.cor || PAL[k]; let d = "", seg = false;
+    s.v.forEach((v, i) => { if (v == null) { seg = false; return; } d += `${seg ? "L" : "M"}${x(i)},${y(v)} `; seg = true; });
+    g += `<path d="${d}" fill="none" stroke="${cor}" stroke-width="${s.w || 2.5}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ""}/>`;
+    if (!s.semPontos) s.v.forEach((v, i) => { if (v != null) g += `<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="${cor}"><title>${esc(s.nome)} · ${esc(labels[i])}: ${Math.round(v * 10) / 10}</title></circle>`; }); });
+  return `<div class="leg">${series.map((s, k) => `<span><i style="background:${s.cor || PAL[k]}"></i>${esc(s.nome)}</span>`).join("")}</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de linhas">${g}</svg>`;
+}
+function grafBarras({ labels, series, max = 10, alt = 240, linha }) {
+  const W = 680, H = alt, L = 40, R = 10, T0 = 12, B = 46, iw = W - L - R, ih = H - T0 - B;
+  const gw = iw / Math.max(1, labels.length), bw = Math.min(28, gw * 0.75 / series.length); let g = "";
+  for (let i = 0; i <= 5; i++) { const v = max * i / 5, yy = T0 + ih - ih * i / 5; g += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="#E3E8EF"/><text x="${L - 6}" y="${yy + 4}" font-size="11" text-anchor="end" fill="#56627A">${Math.round(v)}</text>`; }
+  if (linha != null) { const yy = T0 + ih - linha / max * ih; g += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="#C21F3A" stroke-dasharray="5 4"/>`; }
+  labels.forEach((l, i) => { const x0 = L + i * gw + (gw - bw * series.length) / 2;
+    series.forEach((s, k) => { const v = s.v[i]; if (v == null) return; const h = Math.max(0, v) / max * ih; g += `<rect x="${x0 + k * bw}" y="${T0 + ih - h}" width="${bw - 2}" height="${h}" fill="${s.cor || PAL[k + 1]}"><title>${esc(l)}: ${nota1(v)}</title></rect>`; });
+    g += `<text x="${L + i * gw + gw / 2}" y="${H - 26}" font-size="11" text-anchor="middle" fill="#56627A">${esc(l.length > 14 ? l.slice(0, 13) + "…" : l)}</text>`; });
+  return `<div class="leg">${series.map((s, k) => `<span><i style="background:${s.cor || PAL[k + 1]}"></i>${esc(s.nome)}</span>`).join("")}${linha != null ? `<span><i style="background:#C21F3A"></i>Nota mínima</span>` : ""}</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de barras">${g}</svg>`;
+}
+const medidor = (rot, v, max = 10) => `<div class="medidor"><span>${esc(rot)}</span><div class="barra"><i style="width:${Math.max(0, Math.min(100, (v ?? 0) / max * 100))}%"></i></div><b>${nota1(v)}</b></div>`;
+function curvaS(tid = TID()) {
+  const a = eu(); const pl = planejamento(tid); const ini = a?.trilhas?.[tid]?.inicio; if (!pl.length || !ini) return "";
+  const fim = [pl.at(-1).fim, previsao(tid) || hoje(), hoje()].sort().at(-1); const sem = Math.max(1, Math.ceil(diasEntre(ini, fim) / 7)) + 1;
+  const datas = Array.from({ length: sem }, (_, i) => { const d = parse(ini); d.setDate(d.getDate() + i * 7); return iso(d); });
+  const planV = datas.map(d => pl.filter(x => x.fim <= d).length);
+  const cnt = d => modsT(tid).filter(m => { const p = prog(m.id, tid); return p?.status === "aprovado" && p.aprovadoEm <= d; }).length;
+  const realV = datas.map((d, i) => d <= hoje() ? cnt(d) : i > 0 && datas[i - 1] <= hoje() ? cnt(hoje()) : null);
+  return grafLinhas({ labels: datas.map((_, i) => "S" + i), series: [{ nome: "Planejado (acumulado)", v: planV, cor: "#9AA8BE", dash: "6 4", semPontos: true }, { nome: "Realizado (acumulado)", v: realV, cor: "#1554C0" }], min: 0, max: Math.max(pl.length, 1), passo: Math.max(1, Math.ceil(pl.length / 5)) });
+}
+
+/* ------------------------------ PDCA ------------------------------ */
+function anelPDCA(atual, concluido) {
+  const ordem = ["P", "D", "C", "A"]; const ia = ordem.indexOf(atual); const feito = i => concluido || (ia > -1 && i < ia);
+  const quad = [["P", "M100,100 L100,8 A92,92 0 0,1 192,100 Z", 146, 74], ["D", "M100,100 L192,100 A92,92 0 0,1 100,192 Z", 146, 150], ["C", "M100,100 L100,192 A92,92 0 0,1 8,100 Z", 54, 150], ["A", "M100,100 L8,100 A92,92 0 0,1 100,8 Z", 54, 74]];
+  return `<svg viewBox="0 0 200 200" role="img" aria-label="Ciclo PDCA do módulo: etapa ${atual || "não iniciada"}">${quad.map(([k, d, x, y], i) => `<path d="${d}" fill="${feito(i) ? "#0B1220" : k === atual ? "#1554C0" : "#E3E8EF"}" stroke="#fff" stroke-width="4"/><text x="${x}" y="${y + 12}" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="700" font-size="38" fill="${feito(i) || k === atual ? "#fff" : "#9AA8BE"}">${k}</text>`).join("")}<circle cx="100" cy="100" r="30" fill="#0B1220"/><text x="100" y="107" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="700" font-size="${concluido ? 18 : 20}" fill="#7FB2FF">${concluido ? "OK" : atual || "—"}</text></svg>`;
+}
+function legendaPDCA(atual, concluido) { const o = ["P", "D", "C", "A"], ia = o.indexOf(atual); return `<div class="pdca-leg">${o.map((k, i) => `<div class="${concluido || (ia > -1 && i < ia) ? "feito" : k === atual ? "agora" : ""}"><b>${k}</b><span><strong>${PDCA[k].nome}</strong>${PDCA[k].texto}</span></div>`).join("")}</div>`; }
+
+/* ------------------------------ layout ------------------------------ */
+const rota = () => location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+function ir(h) { if (location.hash === "#" + h) render(); else location.hash = h; }
+function shell(titulo, corpo, { sub = "", volta = null, ativo = "" } = {}) {
+  const a = eu(); const t = T(); const bd = n => n ? `<span class="badge">${n}</span>` : "";
+  const abertas = t ? S.db.duvidas.filter(d => d.tid === TID() && !(d.respostas || []).length).length : 0;
+  const nav = [["trilha", "Minha trilha", ""], ["edital", "Edital e prova", ""], ["resultados", "Meus resultados", ""], ["duvidas", "Dúvidas da turma", bd(abertas)], ["questoes", "Banco de questões", ""], ["turma", "Turma", ""], ["trilhas", "Trocar de trilha", ""], ["config", "Configurações", ""]];
+  return `<div class="app"><aside class="rail">
+      <a class="marca" href="#/"><span class="wm">Trilha <b>Concursos</b></span><small>${t ? esc(t.nome + " · " + t.cargo) : "Escolha sua trilha"}</small></a>
+      <div class="quem"><span class="peq" style="opacity:.75">Aluno(a)</span><strong>${esc(a?.nome || "")}</strong>${t ? `<a href="#/trilhas">${esc(t.banca)} · trocar trilha</a>` : ""}</div>
+      <nav aria-label="Principal">${nav.map(([h, tt, b]) => `<a href="#/${h}" class="${ativo === h ? "ativo" : ""}">${tt}${b}</a>`).join("")}<a href="#/sair">Sair</a></nav>
+      <div class="pe"><div class="sync" id="sync"></div>Estudo em ciclos PDCA<br>com provas anteriores no fim de cada fase</div></aside>
+    <main class="main"><header class="topo">${volta ? `<a class="volta" href="${volta[0]}">← ${esc(volta[1])}</a><br>` : ""}<h1>${esc(titulo)}</h1>${sub ? `<p>${sub}</p>` : ""}</header>
+      <div class="conteudo">${corpo}</div></main></div>`;
+}
+
+async function render() {
+  const app = $("#app");
+  if (S.erroCarga) { app.innerHTML = telaErro(); ligar(); return; }
+  if (!S.db) return;
+  const r = rota();
+  if (r[0] === "config" && !S.user) { app.innerHTML = telaConfig(true); ligar(); return; }
+  if (r[0] === "sair") { ss.del(K_SES); S.user = null; location.hash = "#/"; return; }
+  if (!S.user) { app.innerHTML = telaLogin(); ligar(); return; }
+  let html;
+  if (r[0] === "trilhas" || !T()) html = telaTrilhas();
+  else switch (r[0]) {
+    case "modulo": html = telaModulo(r[1]); break;
+    case "teste": html = telaTeste(r[1]); break;
+    case "tentativa": html = telaTentativa(r[1], r[2]); break;
+    case "fase": html = telaFase(r[1]); break;
+    case "edital": html = telaEdital(); break;
+    case "resultados": html = telaResultados(); break;
+    case "duvidas": html = telaDuvidas(); break;
+    case "questoes": html = telaQuestoes(); break;
+    case "turma": html = telaTurma(); break;
+    case "config": html = telaConfig(false); break;
+    default: html = telaTrilha();
+  }
+  app.innerHTML = html; atualizarSync(); ligar(); window.scrollTo?.(0, 0);
+}
+
+/* ------------------------------ acesso ------------------------------ */
+function ladoLogin(titulo, texto) {
+  return `<div class="lado"><div><span class="selo">Trilha Concursos</span><h1>${titulo}</h1><p>${texto}</p></div>
+    <p class="peq" style="margin:0;color:#AFC4E6">${Object.values(TR).map(t => esc(t.nome + " · " + t.cargo)).join("<br>")}</p></div>`;
+}
+function telaErro() {
+  return `<div class="login">${ladoLogin("Trilha <span>Concursos</span>", "Não foi possível abrir a base de dados.")}
+  <div class="form"><h2>Conexão com a base</h2><div class="aviso erro">${esc(S.erroCarga)}</div><p>Confira o repositório, a branch e o token em Configurações, ou use só este navegador.</p>
+  <div class="acoes"><a class="btn" href="#/config" data-acao="limpar-erro">Abrir configurações</a><button class="btn linha" data-acao="usar-local">Usar só este navegador</button><button class="btn linha" data-acao="recarregar">Tentar de novo</button></div></div></div>`;
+}
+function opcoesTrilha(sel) { return Object.values(TR).map(t => `<option value="${t.id}" ${t.id === sel ? "selected" : ""}>${esc(t.nome + " · " + t.cargo)}</option>`).join(""); }
+function telaLogin() {
+  const als = S.db.alunos.filter(a => a.ativo !== false); const gh = Store.gh(); const c = Store.cfg(); const criar = !als.length || rota()[0] === "novo";
+  const formCriar = `<h2>Criar meu acesso</h2><p class="sub">Cada pessoa tem o próprio acesso, com nome e PIN. O progresso de cada um fica separado.</p>
+      <label for="i-nome">Seu nome</label><input id="i-nome" type="text" autocomplete="name">
+      <label for="i-trilha">Trilha que você vai estudar</label><select id="i-trilha">${opcoesTrilha()}</select>
+      <div class="linha-form"><div><label for="i-pin">PIN (4 a 8 dígitos)</label><input id="i-pin" type="password" inputmode="numeric" autocomplete="new-password"></div><div><label for="i-pin2">Repita o PIN</label><input id="i-pin2" type="password" inputmode="numeric" autocomplete="new-password"></div></div>
+      <div class="acoes"><button class="btn" data-acao="criar-aluno">Criar acesso e começar</button>${als.length ? `<a class="btn linha" href="#/">Já tenho acesso</a>` : ""}</div>`;
+  const formEntrar = `<h2>Entrar</h2><label for="l-aluno">Seu nome</label><select id="l-aluno">${als.map(a => `<option value="${a.id}">${esc(a.nome)}</option>`).join("")}</select>
+      <label for="l-pin">PIN</label><input id="l-pin" type="password" inputmode="numeric" autocomplete="current-password">
+      <div class="acoes"><button class="btn" data-acao="entrar">Entrar</button><a class="btn linha" href="#/novo">Criar novo acesso</a></div>`;
+  return `<div class="login">${ladoLogin("Trilha <span>Concursos</span>", "Estude pelo conteúdo do edital em ciclos PDCA: planeje, estude, teste e corrija o rumo. Cada fase termina com uma prova anterior da banca.")}
+    <div class="form">${!gh && !als.length ? `<div class="aviso">A base ainda não está conectada ao GitHub. Para várias pessoas estudarem juntas, <a href="#/config">configure o armazenamento</a> antes de criar os acessos.</div>` : ""}
+      ${criar ? formCriar : formEntrar}
+      <p class="peq sub" style="margin-top:28px">${gh ? `Base conectada ao GitHub: <b>${esc(c.owner)}/${esc(c.repo)}</b>.` : `A base está salva só neste navegador.`} <a href="#/config">Configurar armazenamento</a></p></div></div>`;
+}
+
+/* ------------------------------ escolha de trilha ------------------------------ */
+function telaTrilhas() {
+  const a = eu();
+  const cards = Object.values(TR).map(t => { const ind = indicadores(t.id); const pc = ind.total ? Math.round(ind.aprov / ind.total * 100) : 0; const ativa = a.trilhaAtiva === t.id; const comecou = !!a.trilhas?.[t.id];
+    return `<div class="card-trilha ${ativa ? "ativa" : ""}"><div class="tt">${esc(t.nome)}</div><div class="cg">${esc(t.cargo)}</div><div class="peq sub">${esc(t.banca)} · ${ind.total} módulos em ${t.fases.length} fases</div>
+      <div class="barra"><i style="width:${pc}%"></i></div><div class="peq">${comecou ? `${ind.aprov} de ${ind.total} módulos (${pc}%)` : "Ainda não iniciada"}</div>
+      <div class="acoes">${ativa ? `<a class="btn" href="#/trilha">Continuar</a>` : `<button class="btn ${comecou ? "" : "escuro"}" data-acao="ativar-trilha" data-t="${t.id}">${comecou ? "Voltar para esta trilha" : "Estudar esta trilha"}</button>`}</div></div>`; }).join("");
+  return shell("Escolha sua trilha", `<div class="faixa">Você pode estudar mais de uma trilha. O progresso de cada uma fica guardado separado, e as matérias em comum (Português, por exemplo) contam só dentro da trilha em que você fez o teste.</div><div class="cards">${cards}</div>`, { ativo: "trilhas", sub: "Cada trilha segue o conteúdo programático do último edital do concurso." });
+}
+
+/* ------------------------------ minha trilha ------------------------------ */
+function telaTrilha() {
+  const t = T(); const m = moduloAtual(); const ind = indicadores(); const a = eu();
+  const fsPend = t.fases.find(f => faseSit(f.n) === "simulado");
+  const s = m ? situacao(m.id) : null; const etapa = s ? etapaPDCA(s.st) : "";
+  let tituloAgora, proximo;
+  if (fsPend) { tituloAgora = `Fase ${fsPend.n}: prova anterior`; proximo = `<p>Você concluiu todos os módulos da fase. Agora resolva a prova anterior e registre o resultado para fechar o ciclo da fase.</p><div class="acoes"><a class="btn" href="#/fase/${fsPend.n}">Abrir a prova da fase</a></div>`; }
+  else if (m) { tituloAgora = `${m.cod} · ${m.titulo}`; proximo = `<p class="sub">${esc(m.disciplina)} · Fase ${m.fase}</p><p>${chip(s.st)}</p><div class="acoes"><a class="btn" href="#/modulo/${m.id}">${s.st === "disponivel" ? "Planejar e iniciar" : s.st === "teste" ? "Fazer o teste" : s.st === "autocorrecao" ? "Corrigir dissertativas" : "Continuar estudando"}</a></div>`; }
+  else { tituloAgora = "Trilha concluída"; proximo = `<p>Todos os módulos e provas foram concluídos. Revise os pontos fracos em Meus resultados e refaça as provas anteriores.</p>`; }
+  const fases = t.fases.map(f => { const fs = faseSit(f.n); const lib = faseLiberada(f.n);
+    return `<div class="fase"><div class="fn"><b>${f.n}</b>${esc(f.nome)}<div style="margin-top:6px">${chip(fs)}</div></div><div><p class="peq sub" style="margin-bottom:10px">${esc(f.objetivo)}</p><div class="estacoes">${modsFase(f.n).map(x => { const st = situacao(x.id).st;
+      return `<a class="estacao ${m?.id === x.id && !fsPend ? "atual" : st === "aprovado" ? "feito" : st === "bloqueado" ? "bloq" : ""}" href="#/modulo/${x.id}"><span class="cod">${x.cod}</span><span class="tit">${esc(x.titulo)}</span><span class="disc">${esc(x.disciplina)} · ${fmtH(x.horas)}</span>${chip(st)}${prog(x.id)?.notaTeste != null ? ` <b class="peq">${nota1(prog(x.id).notaTeste)}</b>` : ""}</a>`; }).join("")}
+      <a class="estacao sim ${fsPend === f ? "atual" : ""} ${!lib ? "bloq" : ""}" href="#/fase/${f.n}"><span class="cod">Fim da fase</span><span class="tit">${esc(f.simulado.titulo)}</span><span class="disc">Prova anterior · ${simReg(f.n).length ? "resultado registrado" : "a fazer"}</span></a></div></div></div>`; }).join("");
+  return shell(`Olá, ${(a.nome || "").split(" ")[0]}`, `
+    ${t.situacao ? `<div class="aviso info"><b>Situação do concurso:</b> ${esc(t.situacao)}</div>` : ""}
+    <div class="pdca-wrap"><div class="pdca">${anelPDCA(fsPend ? "A" : etapa, !m && !fsPend)}</div><div><h2 style="margin-top:0">${esc(tituloAgora)}</h2>${proximo}</div></div>
+    <div class="grade g4" style="margin-top:28px"><div class="num"><div class="v">${ind.aprov}/${ind.total}</div><div class="l">Módulos concluídos</div></div><div class="num"><div class="v">${ind.fasesOk}/${t.fases.length}</div><div class="l">Fases concluídas</div></div><div class="num"><div class="v">${nota1(ind.mediaFinal)}</div><div class="l">Média dos módulos</div></div><div class="num"><div class="v">${fmt(ind.previsao)}</div><div class="l">Previsão de término ${semaforo(ind)}</div></div></div>
+    <h2>Sua trilha</h2>${a.ordemLivre ? `<p class="peq sub">Ordem livre ligada: todas as fases estão abertas.</p>` : `<p class="peq sub">A fase seguinte abre quando a anterior termina (módulos aprovados e prova anterior registrada). Dentro da fase, a ordem dos módulos é livre.</p>`}<div class="trilho">${fases}</div>`,
+    { ativo: "trilha", sub: `${esc(t.cargo)} · ${esc(t.banca)} · ${esc(t.edital.nome)}` });
+}
+
+/* ------------------------------ edital ------------------------------ */
+function telaEdital() {
+  const t = T(); const grupos = ["Conhecimentos Básicos", "Conhecimentos Específicos", "Conhecimentos básicos", "Conhecimentos específicos"];
+  return shell("Edital e prova", `${t.situacao ? `<div class="aviso info"><b>Situação:</b> ${esc(t.situacao)}</div>` : ""}
+    <div class="plano"><div><small>Banca</small><strong>${esc(t.banca)}</strong></div><div><small>Cargo</small><strong>${esc(t.cargo)}</strong></div><div><small>Formato</small><strong>${esc(t.formato)}</strong></div><div><small>Edital base</small><strong><a href="${esc(t.edital.url)}" target="_blank" rel="noopener">${esc(t.edital.nome)}</a></strong></div></div>
+    <h2>Estrutura da prova</h2><div class="tabela-wrap"><table><thead><tr><th>Disciplina</th><th style="text-align:right">${esc(t.unidade || "Questões")}</th><th style="text-align:right">Pontos</th></tr></thead><tbody>${t.prova.map(r => `<tr class="${grupos.includes(r[0]) ? "grp" : ""}"><td>${esc(r[0])}</td><td class="n">${r[1] ?? "–"}</td><td class="n">${r[2] != null ? String(r[2]).replace(".", ",") : "–"}</td></tr>`).join("")}</tbody></table></div>
+    <h2>Regras que mudam a estratégia</h2><ul class="lista">${t.regras.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
+    ${t.etapas ? `<h2>Etapas do concurso</h2><ul class="lista">${t.etapas.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
+    <h2>Como a trilha foi montada</h2><p>${esc(t.logica)}</p>
+    <div class="tabela-wrap"><table><thead><tr><th>Módulo</th><th>Disciplina</th><th>Fase</th><th style="text-align:right">Horas</th><th style="text-align:right">Nota mín.</th></tr></thead><tbody>${modsT().map(m => `<tr><td>${m.cod} · <a href="#/modulo/${m.id}">${esc(m.titulo)}</a></td><td>${esc(m.disciplina)}</td><td>${m.fase}</td><td class="n">${fmtH(m.horas)}</td><td class="n">${nota1(m.notaMin)}</td></tr>`).join("")}</tbody></table></div>`,
+    { ativo: "edital", sub: `${esc(t.nome)} · ${esc(t.cargo)}` });
+}
+
+/* ------------------------------ conteúdo ------------------------------ */
+function renderConteudo(blocos) {
+  return (blocos || []).map(b => {
+    if (b.h) return `<h3>${esc(b.h)}</h3>`;
+    if (b.h4) return `<h4>${esc(b.h4)}</h4>`;
+    if (b.p) return `<p>${esc(b.p)}</p>`;
+    if (b.lista) return `<ul class="lista">${b.lista.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (b.tabela) return `<div class="tabela-wrap" style="margin:8px 0 16px"><table><thead><tr>${b.tabela.cab.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${b.tabela.linhas.map(l => `<tr>${l.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    if (b.nota) return `<div class="aviso info">${esc(b.nota)}</div>`;
+    if (b.alerta) return `<div class="atencao"><b>ATENÇÃO:</b> ${esc(b.alerta)}</div>`;
+    if (b.ex) return `<div class="exemplo"><b>Exemplo</b>${esc(b.ex)}</div>`;
+    if (b.formula) return `<div class="formula">${esc(b.formula)}</div>`;
+    if (b.dica) return `<div class="dica"><b>Como a banca cobra:</b> ${esc(b.dica)}</div>`;
+    if (b.fonte) return `<p class="peq sub" style="margin-top:14px">Fontes: ${esc(b.fonte)}</p>`;
+    return "";
+  }).join("");
+}
+function cardDuvida(d) {
+  const au = aluno(d.aid); const m = d.modId ? modPorId(d.modId) : null;
+  return `<div class="duvida ${(d.respostas || []).length ? "" : "aberta"}"><div class="meta"><b>${esc(au?.nome || "—")}</b> · ${m ? `${m.cod} · ${esc(m.titulo)}` : "Geral"} · ${fmtHora(d.em)}</div><div class="perg">${esc(d.texto)}</div>
+    ${(d.respostas || []).map(r => `<div class="resp"><small>${esc(aluno(r.aid)?.nome || "—")} · ${fmtHora(r.em)}</small>${esc(r.texto)}</div>`).join("")}
+    <details style="margin-top:8px"><summary class="peq" style="cursor:pointer;color:var(--az)">Responder</summary><textarea id="rd-${d.id}" style="min-height:70px;margin-top:6px"></textarea><div class="acoes"><button class="btn mini" data-acao="responder" data-id="${d.id}">Enviar resposta</button></div></details></div>`;
+}
+function formDuvida(modFixo) {
+  return `<div class="painel">${modFixo ? `<input type="hidden" id="dv-mod" value="${modFixo}">` : `<label for="dv-mod">Sobre qual módulo?</label><select id="dv-mod"><option value="">Geral / outro assunto</option>${modsT().map(m => `<option value="${m.id}">${m.cod} · ${esc(m.titulo)}</option>`).join("")}</select>`}
+    <label for="dv-txt">Sua dúvida</label><textarea id="dv-txt" placeholder="Escreva o ponto que não ficou claro. Se for uma questão, copie o enunciado."></textarea><div class="acoes"><button class="btn" data-acao="enviar-duvida">Publicar dúvida para a turma</button></div></div>`;
+}
+function telaModulo(mid) {
+  const m = modPorId(mid); if (!m) return shell("Módulo não encontrado", `<a class="btn" href="#/trilha">Voltar</a>`, {});
+  const s = situacao(mid); const p = s.p; const podeEditar = p && ["estudo", "reciclagem", "teste"].includes(s.st);
+  const A = {
+    bloqueado: `<div class="aviso">Este módulo abre quando a fase anterior terminar (módulos aprovados e prova anterior registrada). Você pode ler o conteúdo enquanto isso, ou ligar a ordem livre em Configurações.</div>`,
+    disponivel: `<div class="painel cinza"><b>Planejar.</b> Estudo previsto de ${fmtH(m.horas)} e nota mínima ${nota1(m.notaMin)}. Pela sua rotina de estudo, o teste fica para ${fmt(addHoras(hoje(), m.horas))}. O teste também libera assim que você marcar todo o checklist.<div class="acoes"><button class="btn" data-acao="iniciar" data-mod="${mid}">Iniciar módulo</button></div></div>`,
+    estudo: `<div class="painel cinza"><b>Executar.</b> Prazo do teste: ${fmt(p?.prazo)} (${s.faltam} dia(s)). Estude o material, marque o checklist e registre suas dúvidas. Quando o checklist estiver completo, o teste libera.<div class="acoes"><button class="btn linha mini" data-acao="liberar-teste" data-mod="${mid}">Já estudei, liberar o teste agora</button></div></div>`,
+    teste: `<div class="painel destaque"><b>Checar.</b> Teste liberado: ${questoesDe(mid).length} questões, nota mínima ${nota1(m.notaMin)}.${T().estilo === "ce" ? " Estilo Cebraspe: nos itens Certo/Errado, um item errado anula um certo. Deixar em branco vale zero." : ""}<div class="acoes"><a class="btn" href="#/teste/${mid}">Fazer o teste</a></div></div>`,
+    autocorrecao: `<div class="painel destaque"><b>Checar.</b> Falta corrigir suas respostas dissertativas comparando com o gabarito comentado.<div class="acoes"><a class="btn" href="#/tentativa/${mid}/${p?.tentativas?.at(-1)?.id}">Corrigir agora</a></div></div>`,
+    aprovado: `<div class="aviso ok"><b>Agir: módulo concluído</b> em ${fmt(p?.aprovadoEm)} com nota ${nota1(p?.notaTeste)}. Releia os pontos que você errou na correção antes da prova da fase.<div class="acoes"><button class="btn linha mini" data-acao="refazer" data-mod="${mid}">Refazer o teste para revisar</button></div></div>`
+  };
+  A.reciclagem = `<div class="painel cinza"><b>Agir → revisar.</b> A nota ficou abaixo da mínima. Revise os tópicos das questões que você errou${p?.tentativas?.at(-1) ? ` (<a href="#/tentativa/${mid}/${p.tentativas.at(-1).id}">ver correção</a>)` : ""}. Novo teste em ${fmt(p?.prazo)}.<div class="acoes"><button class="btn linha mini" data-acao="liberar-teste" data-mod="${mid}">Revisei, liberar o teste agora</button></div></div>`;
+  const hist = p?.tentativas?.length ? `<h2>Testes</h2><div class="tabela-wrap"><table><thead><tr><th>Tentativa</th><th>Data</th><th style="text-align:right">Nota</th><th>Resultado</th><th></th></tr></thead><tbody>${p.tentativas.map(t => `<tr><td>${t.n}ª</td><td>${fmtHora(t.em)}</td><td class="n"><b>${nota1(t.nota)}</b></td><td>${t.status === "avaliada" ? (t.aprovado ? chip("aprovado") : chip("reciclagem")) : chip("autocorrecao")}</td><td><a href="#/tentativa/${mid}/${t.id}">Ver correção</a></td></tr>`).join("")}</tbody></table></div>` : "";
+  const duvs = S.db.duvidas.filter(d => d.tid === TID() && d.modId === mid); const ck = p?.checklist || {};
+  return shell(`${m.cod} · ${m.titulo}`, `
+    <div class="faixa">${esc(m.objetivo)}</div>
+    <div class="plano"><div><small>Disciplina</small><strong>${esc(m.disciplina)}</strong></div><div><small>Estudo</small><strong>${fmtH(m.horas)}</strong></div><div><small>Nota mínima</small><strong>${nota1(m.notaMin)}</strong></div><div><small>No edital</small><strong>${esc(m.peso || "—")}</strong></div></div>
+    <div class="pdca-wrap"><div class="pdca">${anelPDCA(etapaPDCA(s.st), s.st === "aprovado")}</div><div>${legendaPDCA(etapaPDCA(s.st), s.st === "aprovado")}</div></div><div style="margin-top:18px">${A[s.st] || ""}</div>
+    ${m.edital ? `<h2>O que o edital pede</h2><ul class="lista">${m.edital.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    ${m.porque?.length ? `<h2>Por que este módulo importa</h2><ul class="lista">${m.porque.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    <h2>Conteúdo</h2>${renderConteudo(m.conteudo)}
+    ${(m.atencao || []).map(a => `<div class="atencao"><b>ATENÇÃO:</b> ${esc(a)}</div>`).join("")}
+    <h2>Seu estudo</h2><div class="grade g2"><div><h3>Checklist</h3>${(m.checklist || []).map((c, i) => `<label class="check"><input type="checkbox" data-ck="${i}" data-mod="${mid}" ${ck[i] ? "checked" : ""} ${podeEditar ? "" : "disabled"}><span>${esc(c)}</span></label>`).join("")}${!p ? `<p class="peq sub">Inicie o módulo para marcar o checklist.</p>` : ""}</div>
+      <div><h3>Anotações</h3><textarea data-anot data-mod="${mid}" ${p ? "" : "disabled"} placeholder="Resumo, macetes, artigos de lei que você precisa rever.">${esc(p?.anotacoes || "")}</textarea>${p ? `<p class="ajuda">Salvo automaticamente.</p>` : ""}</div></div>
+    <h2>Dúvidas deste módulo</h2>${duvs.map(cardDuvida).join("") || `<p class="sub">Nenhuma dúvida publicada.</p>`}${formDuvida(mid)}
+    ${hist}`, { volta: ["#/trilha", "Minha trilha"], ativo: "trilha", sub: `Fase ${m.fase} · ${esc(faseDe(m.fase).nome)}` });
+}
+function htmlQuestao(q, i, rasc, estilo) {
+  const tipo = { mc: "Múltipla escolha", ce: "Certo ou errado", aberta: "Dissertativa" }[q.tipo];
+  let corpo;
+  if (q.tipo === "mc") corpo = `<div role="radiogroup" aria-labelledby="en-${q.id}">${q.opcoes.map((o, k) => `<label class="opcao"><input type="radio" name="r-${q.id}" value="${k}" data-resp="${q.id}" ${String(rasc[q.id]) === String(k) ? "checked" : ""}><span class="let">${LET[k]}</span><span>${esc(o)}</span></label>`).join("")}</div>`;
+  else if (q.tipo === "ce") corpo = `<div class="ce" role="radiogroup" aria-labelledby="en-${q.id}">${[["C", "Certo"], ["E", "Errado"], ...(estilo === "ce" ? [["B", "Deixar em branco"]] : [])].map(([v, l]) => `<label><input type="radio" name="r-${q.id}" value="${v}" data-resp="${q.id}" ${rasc[q.id] === v ? "checked" : ""}>${l}</label>`).join("")}</div>`;
+  else corpo = `<textarea data-resp="${q.id}" aria-labelledby="en-${q.id}" placeholder="Escreva sua resposta. Depois do envio você compara com o gabarito comentado.">${esc(rasc[q.id] || "")}</textarea>`;
+  return `<div class="questao"><div class="qh"><span class="qn">Questão ${i + 1}</span><span class="qt">${tipo}</span></div>${q.base ? `<div class="base">${esc(q.base)}</div>` : ""}<div class="enun" id="en-${q.id}">${esc(q.enunciado)}</div>${corpo}</div>`;
+}
+function telaTeste(mid) {
+  const m = modPorId(mid); const s = situacao(mid);
+  if (s.st !== "teste") return shell("Teste indisponível", `<div class="aviso">${["estudo", "reciclagem"].includes(s.st) ? `O teste libera em ${fmt(s.p.prazo)} ou quando o checklist estiver completo.` : "Este teste não está disponível agora."}</div><a class="btn" href="#/modulo/${mid}">Voltar ao módulo</a>`, { ativo: "trilha" });
+  const qs = questoesDe(mid); let rasc = {}; try { rasc = JSON.parse(ls.get(K_RASC + S.user.id + TID() + mid) || "{}"); } catch { }
+  return shell(`Teste · ${m.cod}`, `<div class="faixa">${esc(m.titulo)} · ${qs.length} questões · nota mínima ${nota1(m.notaMin)}.${T().estilo === "ce" ? " Itens Certo/Errado seguem a regra do Cebraspe: errado desconta um certo." : ""} O rascunho fica salvo neste navegador até o envio.</div>
+    ${qs.map((q, i) => htmlQuestao(q, i, rasc, T().estilo)).join("")}
+    <div class="acoes"><button class="btn" data-acao="enviar-teste" data-mod="${mid}">Enviar teste</button><a class="btn linha" href="#/modulo/${mid}">Voltar ao módulo</a></div>`, { volta: [`#/modulo/${mid}`, m.titulo], ativo: "trilha" });
+}
+function telaTentativa(mid, tid) {
+  const m = modPorId(mid), p = prog(mid), t = p?.tentativas?.find(x => x.id === tid); if (!t) return shell("Tentativa não encontrada", `<a class="btn" href="#/trilha">Voltar</a>`, {});
+  const auto = t.status === "autocorrecao";
+  const qs = t.questoes.map((q, i) => { const r = t.respostas[q.id]; const n = t.notas?.[q.id]; let bloco = "", marca = "";
+    if (q.tipo === "mc") { bloco = q.opcoes.map((o, k) => `<div class="opcao ${k === q.correta ? "certa" : k === r ? "errada" : ""}" style="cursor:default"><span class="let">${LET[k]}</span><span>${esc(o)}</span></div>`).join(""); marca = r === q.correta ? "Acertou" : r === undefined ? "Em branco" : "Errou"; }
+    else if (q.tipo === "ce") { const resp = { C: "Certo", E: "Errado", B: "Em branco" }[r] || "Em branco"; bloco = `<p>Sua resposta: <b>${resp}</b> · Gabarito: <b>${q.certo ? "Certo" : "Errado"}</b></p>`; marca = n?.nota > 0 ? "Acertou" : n?.nota < 0 ? "Errou (−1)" : r === "B" || r == null ? "Em branco" : "Errou"; }
+    else { bloco = `<div class="resposta">${esc(r || "(sem resposta)")}</div><div class="gabarito"><b>Gabarito comentado</b>${esc(q.esperado || "—")}</div>`;
+      bloco += auto ? `<label for="ac-${q.id}">Sua autocorreção</label><select id="ac-${q.id}" data-auto="${q.id}" data-max="${q.peso || 2}"><option value="">Escolha…</option><option value="1">Cobri todos os pontos do gabarito</option><option value="0.5">Cobri parte dos pontos</option><option value="0">Não cobri os pontos</option></select>` : "";
+      marca = auto ? "Corrigir" : `${nota1(n?.nota)} de ${n?.max}`; }
+    return `<div class="questao"><div class="qh"><span class="qn">Questão ${i + 1}</span><span class="qt"><b>${marca}</b></span></div>${q.base ? `<div class="base">${esc(q.base)}</div>` : ""}<div class="enun">${esc(q.enunciado)}</div>${bloco}${q.explicacao ? `<div class="gabarito"><b>Explicação</b>${esc(q.explicacao)}</div>` : ""}</div>`; }).join("");
+  const topo = auto ? `<div class="aviso info">Compare cada resposta dissertativa com o gabarito comentado e marque a sua autocorreção. A nota final sai depois disso.</div>` :
+    `<div class="resultado"><div class="nota">${nota1(t.nota)}</div><div><div class="rot">${t.aprovado ? "Aprovado · módulo concluído" : t.revisao ? "Teste de revisão" : "Abaixo da mínima · revisar e refazer"}</div><div class="peq">Nota mínima ${nota1(t.notaMin)} · ${fmtHora(t.em)} · ${t.acertos ?? 0} acerto(s), ${t.erros ?? 0} erro(s), ${t.brancos ?? 0} em branco</div></div></div>`;
+  return shell(`${m.cod} · ${t.n}ª tentativa`, `${topo}<h2>Correção</h2>${qs}${auto ? `<div class="acoes"><button class="btn" data-acao="concluir-autocorrecao" data-mod="${mid}" data-tent="${tid}">Concluir correção</button></div>` : `<div class="acoes"><a class="btn" href="#/modulo/${mid}">Voltar ao módulo</a></div>`}`, { volta: [`#/modulo/${mid}`, m.titulo], ativo: "trilha" });
+}
+
+/* ------------------------------ fase: prova anterior ------------------------------ */
+function telaFase(n) {
+  const f = faseDe(n); if (!f) return shell("Fase não encontrada", "", {}); n = Number(n);
+  const fs = faseSit(n); const regs = simReg(n); const lib = faseLiberada(n);
+  const mods = modsFase(n).map(m => { const s = situacao(m.id); return `<tr><td>${m.cod}</td><td><a href="#/modulo/${m.id}">${esc(m.titulo)}</a></td><td>${esc(m.disciplina)}</td><td>${chip(s.st)}</td><td class="n"><b>${nota1(s.p?.notaTeste)}</b></td></tr>`; }).join("");
+  const sim = f.simulado; const pode = fs === "simulado" || fs === "concluida" || eu().ordemLivre;
+  return shell(`Fase ${n} · ${f.nome}`, `<div class="faixa">${esc(f.objetivo)}</div>
+    <div class="plano"><div><small>Situação</small><strong>${ROT[fs]}</strong></div><div><small>Módulos</small><strong>${modsFase(n).filter(m => prog(m.id)?.status === "aprovado").length}/${modsFase(n).length}</strong></div><div><small>Provas registradas</small><strong>${regs.length}</strong></div><div><small>Melhor resultado</small><strong>${regs.length ? nota1(Math.max(...regs.map(r => r.nota))) : "—"}</strong></div></div>
+    <h2>Módulos da fase</h2><div class="tabela-wrap"><table><thead><tr><th>Nº</th><th>Módulo</th><th>Disciplina</th><th>Situação</th><th style="text-align:right">Nota</th></tr></thead><tbody>${mods}</tbody></table></div>
+    <h2>Agir: ${esc(sim.titulo)}</h2><p>${esc(sim.instrucao)}</p>
+    ${sim.provas.map(pv => `<div class="painel"><b>${esc(pv.t)}</b><div class="peq sub">${esc(pv.d || "")}</div><div class="acoes">${pv.links.map(l => `<a class="btn linha mini" href="${esc(l[1])}" target="_blank" rel="noopener">${esc(l[0])}</a>`).join("")}</div></div>`).join("")}
+    ${!lib ? `<div class="aviso">Fase ainda bloqueada.</div>` : pode ? `<div class="painel cinza"><h3 style="margin-top:0">Registrar resultado</h3><div class="linha-form"><div><label for="sm-prova">Prova</label><select id="sm-prova">${sim.provas.map(pv => `<option>${esc(pv.t)}</option>`).join("")}</select></div><div><label for="sm-ac">Acertos (ou pontos líquidos)</label><input id="sm-ac" type="number" step="1"></div><div><label for="sm-tot">Total de itens considerados</label><input id="sm-tot" type="number" min="1" step="1"></div><div><label for="sm-tempo">Tempo gasto (min)</label><input id="sm-tempo" type="number" min="0"></div></div>
+      <label for="sm-obs">Onde errou mais e o que vai revisar</label><textarea id="sm-obs" style="min-height:80px"></textarea><div class="acoes"><button class="btn" data-acao="registrar-simulado" data-fase="${n}">Registrar resultado da prova</button></div></div>` : `<div class="aviso info">O registro libera quando todos os módulos da fase estiverem aprovados.</div>`}
+    ${regs.length ? `<h2>Resultados registrados</h2><div class="tabela-wrap"><table><thead><tr><th>Data</th><th>Prova</th><th style="text-align:right">Resultado</th><th style="text-align:right">Nota (0–10)</th><th>Revisar</th></tr></thead><tbody>${regs.map(r => `<tr><td>${fmt(r.data)}</td><td>${esc(r.prova)}</td><td class="n">${r.acertos}/${r.total}</td><td class="n"><b>${nota1(r.nota)}</b></td><td>${esc(r.obs || "")}</td></tr>`).join("")}</tbody></table></div>` : ""}`,
+    { volta: ["#/trilha", "Minha trilha"], ativo: "trilha", sub: esc(f.criterio || "") });
+}
+
+/* ------------------------------ resultados ------------------------------ */
+function telaResultados() {
+  const t = T(); const ind = indicadores(); const ms = modsT();
+  const comNota = ms.filter(m => prog(m.id)?.tentativas?.some(x => x.status === "avaliada"));
+  const disc = Object.entries(ind.porDisc).map(([d, v]) => [d, media(v)]).sort((a, b) => a[1] - b[1]);
+  const fracos = comNota.filter(m => { const n = prog(m.id).tentativas.filter(x => x.status === "avaliada").at(-1).nota; return n < m.notaMin + 1; });
+  return shell("Meus resultados", `
+    <div class="grade g4"><div class="num"><div class="v">${ind.aprov}/${ind.total}</div><div class="l">Módulos concluídos</div></div><div class="num"><div class="v">${nota1(ind.media1)}</div><div class="l">Média na 1ª tentativa</div></div><div class="num"><div class="v">${nota1(ind.mediaFinal)}</div><div class="l">Média final dos módulos</div></div><div class="num"><div class="v">${ind.recic}</div><div class="l">Revisões (testes abaixo da mínima)</div></div></div>
+    <h2>Evolução</h2><div class="grade g2"><div class="grafico"><h3>Curva de avanço</h3>${curvaS() || `<p class="sub">Inicie o primeiro módulo para gerar a curva.</p>`}</div>
+      <div class="grafico"><h3>Nota por módulo</h3>${comNota.length ? grafBarras({ labels: comNota.map(m => m.cod), series: [{ nome: "Última nota", v: comNota.map(m => prog(m.id).tentativas.filter(x => x.status === "avaliada").at(-1).nota) }], linha: 7 }) : `<p class="sub">Sem testes ainda.</p>`}</div></div>
+    <h2>Desempenho por disciplina</h2>${disc.length ? `<div class="painel">${disc.map(([d, v]) => medidor(d, v)).join("")}<p class="peq sub" style="margin-top:8px">Ordenado da mais fraca para a mais forte. Comece a revisão pelas primeiras.</p></div>` : `<div class="vazio">Faça os testes para ver o desempenho por disciplina.</div>`}
+    ${fracos.length ? `<h2>Pontos de atenção</h2><div class="aviso">${fracos.map(m => `<a href="#/modulo/${m.id}">${m.cod} · ${esc(m.titulo)}</a>: última nota ${nota1(prog(m.id).tentativas.filter(x => x.status === "avaliada").at(-1).nota)}, perto da mínima. Refaça o teste antes da prova da fase.`).join("<br>")}</div>` : ""}
+    <h2>Provas anteriores</h2>${ind.sims.length ? `<div class="grafico">${grafLinhas({ labels: ind.sims.map((x, i) => `F${x.fase}·${i + 1}`), series: [{ nome: "Nota na prova anterior (0–10)", v: ind.sims.map(x => x.nota), cor: "#0B1220" }], min: 0, max: 10, alt: 220 })}</div>` : `<div class="vazio">Nenhuma prova anterior registrada ainda.</div>`}
+    <h2>Todos os testes</h2>${comNota.length ? `<div class="tabela-wrap"><table><thead><tr><th>Módulo</th><th>Disciplina</th><th>Tentativas</th><th style="text-align:right">Nota final</th><th>Situação</th></tr></thead><tbody>${comNota.map(m => { const p = prog(m.id); return `<tr><td>${m.cod} · ${esc(m.titulo)}</td><td>${esc(m.disciplina)}</td><td>${p.tentativas.filter(x => x.status === "avaliada").map(x => `<a href="#/tentativa/${m.id}/${x.id}">${nota1(x.nota)}</a>`).join(" · ")}</td><td class="n"><b>${nota1(p.notaTeste)}</b></td><td>${chip(situacao(m.id).st)}</td></tr>`; }).join("")}</tbody></table></div>` : `<div class="vazio">Você ainda não fez nenhum teste.</div>`}`,
+    { ativo: "resultados", sub: `${esc(t.nome)} · ${esc(t.cargo)}` });
+}
+
+/* ------------------------------ dúvidas, turma, questões ------------------------------ */
+function telaDuvidas() {
+  const ds = S.db.duvidas.filter(d => d.tid === TID()); const ab = ds.filter(d => !(d.respostas || []).length), rs = ds.filter(d => (d.respostas || []).length);
+  return shell("Dúvidas da turma", `<div class="faixa">Todos que estudam esta trilha veem e respondem as dúvidas. Explicar para o colega também é uma forma de revisar.</div>${formDuvida()}
+    <h2>Sem resposta (${ab.length})</h2>${ab.map(cardDuvida).join("") || `<div class="vazio">Nenhuma dúvida aberta.</div>`}<h2>Respondidas</h2>${rs.slice(0, 80).map(cardDuvida).join("") || `<div class="vazio">Sem histórico.</div>`}`, { ativo: "duvidas", sub: esc(T().nome + " · " + T().cargo) });
+}
+function telaTurma() {
+  const linhas = S.db.alunos.filter(a => a.ativo !== false).flatMap(a => Object.keys(a.trilhas || {}).filter(tid => TR[tid]).map(tid => { const ind = indicadores(tid, a.id); return { a, tid, ind }; }));
+  return shell("Turma", `<div class="faixa">Quem está estudando e em que ponto está. Cada pessoa vê o próprio detalhe em Meus resultados.</div>
+    ${linhas.length ? `<div class="tabela-wrap"><table><thead><tr><th>Aluno(a)</th><th>Trilha</th><th>Módulos</th><th style="text-align:right">Média</th><th style="text-align:right">Provas anteriores</th><th>Avanço</th></tr></thead><tbody>${linhas.map(({ a, tid, ind }) => { const pc = ind.total ? Math.round(ind.aprov / ind.total * 100) : 0; return `<tr><td>${esc(a.nome)}</td><td>${esc(TR[tid].nome + " · " + TR[tid].cargo)}</td><td>${ind.aprov}/${ind.total}</td><td class="n">${nota1(ind.mediaFinal)}</td><td class="n">${ind.sims.length}</td><td style="min-width:140px"><div class="barra"><i style="width:${pc}%"></i></div><span class="peq">${pc}%</span></td></tr>`; }).join("")}</tbody></table></div>` : `<div class="vazio">Ninguém iniciou uma trilha ainda.</div>`}`, { ativo: "turma" });
+}
+function telaQuestoes() {
+  const tipoN = { mc: "Múltipla escolha", ce: "Certo ou errado", aberta: "Dissertativa" };
+  return shell("Banco de questões", `<div class="faixa">Todas as questões dos módulos desta trilha, com gabarito. Desative as que não fizerem sentido e crie as suas: valem para todos que estudam o módulo.</div>` + T().fases.map(f => `<h2>Fase ${f.n} · ${esc(f.nome)}</h2>` + modsFase(f.n).map(m => {
+    const qs = [...(MODLIB[m.id].questoes || []).map((q, i) => embaralha({ ...q, id: q.id || `${m.id}q${i + 1}` })), ...(S.db.questoesExtras[m.id] || []).map(q => ({ ...q, extra: true }))]; const at = qs.filter(q => !S.db.questoesOff[q.id]).length;
+    return `<details class="acc"><summary><span>${m.cod} · ${esc(m.titulo)}</span><span class="peq sub">${at} ativas</span></summary><div class="corpo">
+      ${qs.map((q, i) => `<div class="questao" style="${S.db.questoesOff[q.id] ? "opacity:.5" : ""}"><div class="qh"><span class="qn">${i + 1}. ${tipoN[q.tipo]}${q.extra ? " · criada pela turma" : ""}</span></div>${q.base ? `<div class="base">${esc(q.base)}</div>` : ""}<div class="enun">${esc(q.enunciado)}</div>
+        ${q.tipo === "mc" ? q.opcoes.map((o, k) => `<div class="opcao ${k === q.correta ? "certa" : ""}" style="cursor:default"><span class="let">${LET[k]}</span><span>${esc(o)}</span></div>`).join("") : q.tipo === "ce" ? `<p>Gabarito: <b>${q.certo ? "Certo" : "Errado"}</b></p>` : `<div class="gabarito"><b>Gabarito comentado</b>${esc(q.esperado || "—")}</div>`}
+        ${q.explicacao ? `<div class="gabarito"><b>Explicação</b>${esc(q.explicacao)}</div>` : ""}
+        <div class="acoes"><button class="btn linha mini" data-acao="toggle-questao" data-q="${q.id}">${S.db.questoesOff[q.id] ? "Reativar" : "Desativar"}</button>${q.extra ? `<button class="btn perigo mini" data-acao="apagar-questao" data-mod="${m.id}" data-q="${q.id}">Excluir</button>` : ""}</div></div>`).join("")}
+      <h3>Nova questão</h3><div class="linha-form"><div><label for="nq-t-${m.id}">Tipo</label><select id="nq-t-${m.id}"><option value="mc">Múltipla escolha</option><option value="ce">Certo ou errado</option><option value="aberta">Dissertativa</option></select></div></div>
+      <label for="nq-e-${m.id}">Enunciado</label><textarea id="nq-e-${m.id}" style="min-height:70px"></textarea>
+      <label for="nq-o-${m.id}">Múltipla escolha: alternativas, uma por linha, a correta começa com *. Certo/errado: escreva C ou E.</label><textarea id="nq-o-${m.id}" style="min-height:90px" placeholder="*Alternativa correta&#10;Alternativa errada"></textarea>
+      <label for="nq-g-${m.id}">Explicação ou gabarito comentado</label><textarea id="nq-g-${m.id}" style="min-height:70px"></textarea><div class="acoes"><button class="btn escuro mini" data-acao="add-questao" data-mod="${m.id}">Adicionar questão</button></div></div></details>`; }).join("")).join(""), { ativo: "questoes", sub: esc(T().nome + " · " + T().cargo) });
+}
+
+/* ------------------------------ configurações ------------------------------ */
+function telaConfig(publico) {
+  const c = Store.cfg(); const a = S.user ? eu() : null; const capA = a ? cap() : null;
+  const corpo = `<h2>Onde a base de dados fica</h2><p>A plataforma grava tudo num arquivo JSON dentro de um repositório do GitHub, e todos que usam o mesmo repositório estudam na mesma base. Sem token, a base fica só neste navegador.</p>
+    <div class="painel"><label class="check"><input type="radio" name="modo" value="github" ${c.modo === "github" ? "checked" : ""}><span><b>GitHub</b>: base compartilhada entre a turma</span></label><label class="check"><input type="radio" name="modo" value="local" ${c.modo !== "github" ? "checked" : ""}><span><b>Só este navegador</b>: para testar ou estudar sozinho num aparelho</span></label>
+      <div class="linha-form"><div><label for="c-owner">Usuário</label><input id="c-owner" type="text" value="${esc(c.owner)}"></div><div><label for="c-repo">Repositório</label><input id="c-repo" type="text" value="${esc(c.repo)}"></div><div><label for="c-branch">Branch</label><input id="c-branch" type="text" value="${esc(c.branch)}"></div><div><label for="c-path">Arquivo</label><input id="c-path" type="text" value="${esc(c.path)}"></div></div>
+      <label for="c-token">Token de acesso (fine-grained, Contents: Read and write)</label><input id="c-token" type="password" value="${esc(c.token)}" autocomplete="off" placeholder="github_pat_…"><p class="ajuda">O token fica guardado só neste navegador.</p>
+      <div class="acoes"><button class="btn" data-acao="salvar-config">Salvar e reconectar</button><button class="btn linha" data-acao="testar-config">Testar conexão</button></div><div id="c-res"></div></div>
+    ${a ? `<h2>Sua rotina de estudo</h2><div class="painel"><p>Horas que você estuda em cada dia da semana. O prazo de cada teste é calculado a partir destas horas e da carga do módulo.</p>
+      <div class="cap-semana">${[1, 2, 3, 4, 5, 6, 0].map(d => `<div><label for="cap-${d}">${DIAS[d]}</label><input id="cap-${d}" type="number" min="0" max="16" step="0.5" value="${capA[d]}"></div>`).join("")}</div>
+      <label class="check" style="margin-top:12px"><input type="checkbox" id="cf-livre" ${a.ordemLivre ? "checked" : ""}><span><b>Ordem livre:</b> abrir todas as fases sem esperar a anterior terminar.</span></label>
+      <div class="acoes"><button class="btn escuro" data-acao="salvar-rotina">Salvar rotina</button></div></div>
+      <h2>Seu acesso</h2><div class="painel"><div class="linha-form"><div><label for="p-nome">Nome</label><input id="p-nome" type="text" value="${esc(a.nome)}"></div><div><label for="p-pin">Novo PIN (vazio mantém)</label><input id="p-pin" type="password" inputmode="numeric"></div></div><div class="acoes"><button class="btn escuro" data-acao="salvar-perfil">Salvar</button><button class="btn perigo" data-acao="zerar-trilha">Zerar meu progresso nesta trilha</button></div></div>
+      <h2>Cópia de segurança</h2><div class="painel"><div class="acoes"><button class="btn escuro" data-acao="exportar">Baixar base (.json)</button><label class="btn linha" style="margin:0">Importar base (.json)<input type="file" accept="application/json" data-acao="importar" hidden></label></div></div>` : ""}`;
+  if (publico) return `<div class="login"><div class="lado"><div><span class="selo">Trilha Concursos</span><h1>Configurar <span>armazenamento</span></h1><p><a href="#/" style="color:#9CC0FF">← Voltar para o login</a></p></div></div><div class="form" style="max-width:720px">${corpo}</div></div>`;
+  return shell("Configurações", corpo, { ativo: "config" });
+}
+
+/* ------------------------------ eventos ------------------------------ */
+const val = id => ($("#" + id)?.value ?? "").trim();
+function ligar() {
+  $$("[data-acao]").forEach(el => { const ev = el.tagName === "INPUT" && el.type === "file" ? "change" : "click"; el.addEventListener(ev, e => { if (el.tagName === "A" && el.dataset.acao) e.preventDefault(); acoes[el.dataset.acao]?.(el, e); }); });
+  $("#l-pin")?.addEventListener("keydown", e => { if (e.key === "Enter") acoes.entrar(); });
+  $$("[data-ck]").forEach(el => el.addEventListener("change", () => { const mid = el.dataset.mod, i = el.dataset.ck, v = el.checked, aid = S.user.id, tid = TID();
+    agendar(db => { const p = db.progresso[aid]?.[tid]?.[mid]; if (p) { p.checklist = p.checklist || {}; p.checklist[i] = v; } }, `checklist ${mid}`);
+    if (situacao(mid).st === "teste" && v) { toast("Checklist completo: teste liberado."); setTimeout(render, 300); } }));
+  $$("[data-anot]").forEach(el => el.addEventListener("input", () => { const mid = el.dataset.mod, v = el.value, aid = S.user.id, tid = TID(); agendar(db => { const p = db.progresso[aid]?.[tid]?.[mid]; if (p) p.anotacoes = v; }, `anotações ${mid}`); }));
+  const salvaRasc = () => { const r = rota(); if (r[0] !== "teste") return; ls.set(K_RASC + S.user.id + TID() + r[1], JSON.stringify(coletarRespostas())); };
+  $$("[data-resp]").forEach(el => el.addEventListener(el.type === "radio" ? "change" : "input", salvaRasc));
+}
+function coletarRespostas() { const r = {}; $$("[data-resp]").forEach(el => { const q = el.dataset.resp; if (el.type === "radio") { if (el.checked) r[q] = /^\d+$/.test(el.value) ? Number(el.value) : el.value; } else r[q] = el.value; }); return r; }
+const pinOk = p => /^\d{4,8}$/.test(p);
+function garantirProg(db, aid, tid) { db.progresso[aid] = db.progresso[aid] || {}; db.progresso[aid][tid] = db.progresso[aid][tid] || {}; return db.progresso[aid][tid]; }
+
+const acoes = {
+  recarregar: () => location.reload(),
+  "limpar-erro": () => { S.erroCarga = null; if (!S.db) S.db = migrar(novoDB()); ir("/config"); },
+  "usar-local": () => { const c = Store.cfg(); c.modo = "local"; Store.salvarCfg(c); location.reload(); },
+  async "criar-aluno"() {
+    const nome = val("i-nome"), pin = val("i-pin"), pin2 = val("i-pin2"), trilha = val("i-trilha");
+    if (!nome) return toast("Informe seu nome.", true); if (!pinOk(pin)) return toast("O PIN precisa ter de 4 a 8 dígitos.", true); if (pin !== pin2) return toast("Os PINs não conferem.", true);
+    if (S.db.alunos.some(a => a.nome.toLowerCase() === nome.toLowerCase() && a.ativo !== false)) return toast("Já existe um acesso com esse nome. Use outro nome ou entre com o seu PIN.", true);
+    const id = "a" + uid(); const h = await hashPin(id, pin); S.user = { id };
+    const ok = await salvar(db => { db.alunos.push({ id, nome, pinHash: h, criadoEm: new Date().toISOString(), trilhaAtiva: trilha, trilhas: { [trilha]: { inicio: hoje() } }, capacidade: { ...CAP_PADRAO }, ordemLivre: false, ativo: true }); }, `novo acesso: ${nome}`);
+    if (ok) { ss.set(K_SES, JSON.stringify(S.user)); ir("/trilha"); } else S.user = null;
+  },
+  async entrar() {
+    const id = val("l-aluno"), pin = val("l-pin");
+    try { await Store.carregar(); } catch (e) { return toast(e.message, true); }
+    const a = aluno(id); if (!a) return toast("Selecione seu nome.", true); if (await hashPin(id, pin) !== a.pinHash) return toast("PIN incorreto.", true);
+    S.user = { id }; ss.set(K_SES, JSON.stringify(S.user)); ir("/trilha");
+  },
+  "ativar-trilha"(el) { const t = el.dataset.t, aid = S.user.id; salvar(db => { const a = db.alunos.find(x => x.id === aid); a.trilhaAtiva = t; a.trilhas = a.trilhas || {}; if (!a.trilhas[t]) a.trilhas[t] = { inicio: hoje() }; }, `trilha ativa: ${t}`, `Trilha ${TR[t].nome} · ${TR[t].cargo}.`).then(ok => ok && ir("/trilha")); },
+  iniciar(el) {
+    const mid = el.dataset.mod, aid = S.user.id, tid = TID(); const m = modPorId(mid); if (situacao(mid).st !== "disponivel") return toast("Módulo ainda não liberado.", true);
+    const prazo = addHoras(hoje(), m.horas);
+    salvar(db => { const pr = garantirProg(db, aid, tid); if (pr[mid]) return; pr[mid] = { status: "estudo", inicio: hoje(), prazo, liberado: false, checklist: {}, anotacoes: "", tentativas: [] }; }, `iniciou ${mid}`, "Módulo iniciado. Bons estudos.");
+  },
+  "liberar-teste"(el) { const mid = el.dataset.mod, aid = S.user.id, tid = TID(); salvar(db => { const p = db.progresso[aid]?.[tid]?.[mid]; if (p) p.liberado = true; }, `liberou o teste de ${mid}`, "Teste liberado.").then(ok => ok && ir("/teste/" + mid)); },
+  async refazer(el) { const mid = el.dataset.mod; if (!(await confirmar("Refazer o teste para revisar? A nota do módulo só muda se a nova for maior.", "Refazer"))) return; const aid = S.user.id, tid = TID(); salvar(db => { const p = db.progresso[aid]?.[tid]?.[mid]; if (p) { p.revisando = true; p.status = "estudo"; p.liberado = true; } }, `revisão de ${mid}`).then(ok => ok && ir("/teste/" + mid)); },
+  async "enviar-teste"(el) {
+    const mid = el.dataset.mod, aid = S.user.id, tid = TID(); const qs = questoesDe(mid); const r = coletarRespostas(); const estilo = T().estilo;
+    const falta = qs.filter(q => q.tipo === "aberta" ? !(r[q.id] || "").trim() : r[q.id] === undefined); if (falta.length) return toast(`Responda todas as questões (${falta.length} sem resposta${estilo === "ce" ? "; nos itens C/E você pode marcar 'em branco'" : ""}).`, true);
+    if (!(await confirmar("Enviar o teste? As respostas não podem ser alteradas depois.", "Enviar"))) return;
+    const notas = {}; let acertos = 0, erros = 0, brancos = 0, abertas = false;
+    for (const q of qs) { const pt = pontuar(q, r[q.id], estilo); notas[q.id] = pt; if (pt.nota == null) { abertas = true; continue; } if (q.tipo === "ce" && (r[q.id] === "B")) brancos++; else if (pt.nota > 0) acertos++; else erros++; }
+    const m = modPorId(mid); const tent = { id: "t" + uid(), em: new Date().toISOString(), questoes: qs, respostas: r, notas, acertos, erros, brancos, notaMin: m.notaMin };
+    if (!abertas) { tent.status = "avaliada"; tent.nota = calcNota(tent); tent.aprovado = tent.nota >= m.notaMin; } else tent.status = "autocorrecao";
+    salvar(db => fecharTentativa(db, aid, tid, mid, tent), `enviou o teste de ${mid}`, abertas ? "Teste enviado. Agora corrija as dissertativas." : tent.aprovado ? `Nota ${nota1(tent.nota)}: módulo concluído.` : `Nota ${nota1(tent.nota)}: abaixo da mínima. Revise e refaça.`)
+      .then(ok => { if (ok) { ls.del(K_RASC + aid + tid + mid); ir(`/tentativa/${mid}/${tent.id}`); } });
+  },
+  "concluir-autocorrecao"(el) {
+    const mid = el.dataset.mod, tid0 = el.dataset.tent, aid = S.user.id, tid = TID(); const sel = $$("[data-auto]"); if (sel.some(s => s.value === "")) return toast("Marque a autocorreção de todas as dissertativas.", true);
+    const vals = Object.fromEntries(sel.map(s => [s.dataset.auto, Number(s.value) * Number(s.dataset.max)]));
+    salvar(db => { const p = db.progresso[aid]?.[tid]?.[mid]; const t = p?.tentativas.find(x => x.id === tid0); if (!t || t.status !== "autocorrecao") return;
+      for (const [q, v] of Object.entries(vals)) t.notas[q].nota = v; t.nota = calcNota(t); t.aprovado = t.nota >= t.notaMin; t.status = "avaliada"; aplicarResultado(p, t, modPorId(mid)); }, `corrigiu dissertativas de ${mid}`, "Correção concluída.");
+  },
+  async "registrar-simulado"(el) {
+    const n = Number(el.dataset.fase), aid = S.user.id, tid = TID(); const ac = Number(val("sm-ac")), tot = Number(val("sm-tot"));
+    if (!(tot > 0) || isNaN(ac) || val("sm-ac") === "") return toast("Informe acertos e total.", true); if (ac > tot) return toast("Os acertos não podem passar do total.", true);
+    const reg = { data: hoje(), prova: val("sm-prova"), acertos: ac, total: tot, tempo: Number(val("sm-tempo")) || null, obs: val("sm-obs"), nota: Math.max(0, ac / tot * 10) };
+    salvar(db => { db.simulados[aid] = db.simulados[aid] || {}; db.simulados[aid][tid] = db.simulados[aid][tid] || {}; (db.simulados[aid][tid][n] = db.simulados[aid][tid][n] || []).push(reg); }, `registrou prova anterior da fase ${n}`, "Resultado registrado.");
+  },
+  "enviar-duvida"() {
+    const texto = val("dv-txt"), modId = val("dv-mod") || null, aid = S.user.id, tid = TID(); if (texto.length < 10) return toast("Descreva a dúvida com um pouco mais de detalhe.", true);
+    salvar(db => { db.duvidas.unshift({ id: "d" + uid(), aid, tid, modId, texto, em: new Date().toISOString(), respostas: [] }); }, `nova dúvida${modId ? " em " + modId : ""}`, "Dúvida publicada para a turma.");
+  },
+  responder(el) { const id = el.dataset.id, r = val("rd-" + id), aid = S.user.id; if (!r) return toast("Escreva a resposta.", true); salvar(db => { const d = db.duvidas.find(x => x.id === id); if (d) (d.respostas = d.respostas || []).push({ aid, texto: r, em: new Date().toISOString() }); }, "respondeu dúvida", "Resposta publicada."); },
+  "toggle-questao"(el) { const q = el.dataset.q; salvar(db => { if (db.questoesOff[q]) delete db.questoesOff[q]; else db.questoesOff[q] = true; }, `questão ${q} alterada`); },
+  async "apagar-questao"(el) { if (!(await confirmar("Excluir esta questão?", "Excluir"))) return; const { mod, q } = el.dataset; salvar(db => { db.questoesExtras[mod] = (db.questoesExtras[mod] || []).filter(x => x.id !== q); }, `questão ${q} excluída`); },
+  "add-questao"(el) {
+    const mid = el.dataset.mod; const tipo = val("nq-t-" + mid), enunciado = val("nq-e-" + mid), g = val("nq-g-" + mid), o = val("nq-o-" + mid); if (!enunciado) return toast("Escreva o enunciado.", true);
+    const q = { id: `${mid}x${uid()}`, tipo, enunciado, explicacao: g, autor: S.user.id };
+    if (tipo === "mc") { const l = o.split("\n").map(s => s.trim()).filter(Boolean); const c = l.findIndex(x => x.startsWith("*")); if (l.length < 2 || c < 0) return toast("Informe 2 ou mais alternativas e marque a correta com *.", true); q.opcoes = l.map(x => x.replace(/^\*\s*/, "")); q.correta = c; }
+    else if (tipo === "ce") { if (!/^[CE]$/i.test(o)) return toast("Para certo ou errado, escreva C ou E no campo do gabarito.", true); q.certo = o.toUpperCase() === "C"; }
+    else { q.esperado = g; delete q.explicacao; q.peso = 2; }
+    salvar(db => { (db.questoesExtras[mid] = db.questoesExtras[mid] || []).push(q); }, `nova questão em ${mid}`, "Questão adicionada.");
+  },
+  "salvar-rotina"() { const capN = {}; for (const d of [0, 1, 2, 3, 4, 5, 6]) capN[d] = Math.max(0, Number(val("cap-" + d)) || 0); if (Object.values(capN).reduce((a, b) => a + b, 0) <= 0) return toast("Informe ao menos um dia com horas de estudo.", true);
+    const livre = $("#cf-livre").checked, aid = S.user.id; salvar(db => { const a = db.alunos.find(x => x.id === aid); a.capacidade = capN; a.ordemLivre = livre; }, "rotina de estudo atualizada", "Rotina salva. Os próximos prazos já usam estas horas."); },
+  async "salvar-perfil"() { const nome = val("p-nome"), pin = val("p-pin"), aid = S.user.id; if (pin && !pinOk(pin)) return toast("O PIN precisa ter de 4 a 8 dígitos.", true); const h = pin ? await hashPin(aid, pin) : null; salvar(db => { const a = db.alunos.find(x => x.id === aid); if (nome) a.nome = nome; if (h) a.pinHash = h; }, "acesso atualizado", "Acesso salvo."); },
+  async "zerar-trilha"() { const tid = TID(); if (!(await confirmar(`Apagar todo o seu progresso na trilha ${TR[tid].nome} · ${TR[tid].cargo}? Testes, checklists e provas registradas serão apagados.`, "Apagar progresso"))) return; const aid = S.user.id;
+    salvar(db => { if (db.progresso[aid]) delete db.progresso[aid][tid]; if (db.simulados[aid]) delete db.simulados[aid][tid]; const a = db.alunos.find(x => x.id === aid); a.trilhas[tid] = { inicio: hoje() }; }, `zerou a trilha ${tid}`, "Progresso apagado."); },
+  async "salvar-config"() { const modo = $("input[name=modo]:checked").value; const c = { modo, owner: val("c-owner"), repo: val("c-repo"), branch: val("c-branch") || "main", path: val("c-path") || "data/db.json", token: val("c-token") }; if (modo === "github" && (!c.owner || !c.repo || !c.token)) return toast("Preencha usuário, repositório e token.", true); Store.salvarCfg(c); toast("Configuração salva. Reconectando…"); setTimeout(() => location.reload(), 600); },
+  async "testar-config"() {
+    const c = { owner: val("c-owner"), repo: val("c-repo"), branch: val("c-branch") || "main", path: val("c-path") || "data/db.json", token: val("c-token") }; const out = $("#c-res"); out.innerHTML = `<div class="aviso info">Testando…</div>`;
+    try { const r = await fetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}`, { headers: Store.hdr(c), cache: "no-store" }); if (!r.ok) throw new Error(r.status === 404 ? "Repositório não encontrado ou sem acesso com este token." : `GitHub respondeu ${r.status}.`);
+      const j = await r.json(); const rb = await fetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/branches/${encodeURIComponent(c.branch)}`, { headers: Store.hdr(c), cache: "no-store" }); if (rb.status === 404) throw new Error(`A branch "${c.branch}" não existe. Crie-a no GitHub ou corrija o nome.`);
+      const { db } = await Store.ghGet(c); out.innerHTML = `<div class="aviso ok">Conectado a <b>${esc(j.full_name)}</b> (${j.private ? "privado" : "público"}), branch <b>${esc(c.branch)}</b>. ${db ? `Base encontrada com ${db.alunos?.length || 0} aluno(s).` : "A base será criada na primeira gravação."}</div>`; }
+    catch (e) { out.innerHTML = `<div class="aviso erro">${esc(e.message)}</div>`; }
+  },
+  exportar() { const blob = new Blob([JSON.stringify(S.db, null, 1)], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `trilha-concursos-base-${hoje()}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); },
+  importar(el) { const f = el.files?.[0]; if (!f) return; const rd = new FileReader(); rd.onload = async () => { let n; try { n = migrar(JSON.parse(rd.result)); if (!Array.isArray(n.alunos)) throw 0; } catch { return toast("Arquivo inválido.", true); } if (!(await confirmar("Substituir a base atual pela do arquivo?", "Substituir"))) return; salvar(db => { Object.keys(db).forEach(k => delete db[k]); Object.assign(db, n); }, "base importada", "Base importada."); }; rd.readAsText(f); }
+};
+function aplicarResultado(p, t, m) {
+  if (p.revisando) { p.revisando = false; t.revisao = true; p.status = "aprovado"; if (t.nota > (p.notaTeste ?? 0)) p.notaTeste = t.nota; return; }
+  if (t.aprovado) { p.status = "aprovado"; p.notaTeste = t.nota; p.aprovadoEm = hoje(); }
+  else { p.status = "reciclagem"; p.prazo = addHoras(hoje(), Math.max(1, m.horas / 2)); p.liberado = false; p.checklist = {}; t.novoPrazo = p.prazo; }
+}
+function fecharTentativa(db, aid, tid, mid, tent) {
+  const p = db.progresso[aid]?.[tid]?.[mid]; if (!p) return; tent.n = p.tentativas.length + 1; p.tentativas.push(tent);
+  if (tent.status === "avaliada") aplicarResultado(p, tent, modPorId(mid, tid)); else p.status = "autocorrecao";
+}
+
+window.addEventListener("hashchange", render);
+window.addEventListener("beforeunload", e => { if (fila.length) { e.preventDefault(); e.returnValue = ""; } });
+(async function iniciar() {
+  try { S.user = JSON.parse(ss.get(K_SES) || "null"); } catch { S.user = null; }
+  try { await Store.carregar(); } catch (e) { console.error(e); S.erroCarga = e.message || String(e); }
+  if (S.user && !aluno(S.user.id)) S.user = null;
+  render();
+})();
+</script>
+</body>
+</html>
